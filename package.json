@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "mysql": "^2.13.0"
+  },
+  "name": "booking",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:xpcode/booking.git",
+  "author": "chenhf <4019980@qq.com>",
+  "license": "MIT"
+}
