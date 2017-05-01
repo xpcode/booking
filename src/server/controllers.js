@@ -9,8 +9,6 @@ router.get('/', function (ctx) {
   })
 })
 
-router.get('/login', function (ctx) {console.log(9)
-  ctx.render({
-
-  })
+router.get('/login', function (ctx) {
+  ctx.render()
 })
