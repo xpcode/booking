@@ -1,20 +1,19 @@
-import env from '../env'
-import { createConnection } from 'promise-mysql'
+import moment from 'moment'
 
 export default function (router) {
 
-  /**
-   * 登录
-   * body: {"username":"earl","password":"f379eaf3c831b04de153469d1bec345e", "type": 1}
-   */
-  router.post('/user/login', async function (ctx) {
+  router.get('/restaurants', async function (ctx) {
     const { request, logger } = ctx
-    const { username, password } = request.body
 
     await createConnection(env.mysql)
       .then(conn => {
-        const where = `where username="${username}" and password="${password}"`
-        const sql = `select id, username, realname, restaurantIds, type from user ${where}`
+        const now = new Date()
+        const month = now.getMonth() + 3
+        const newTime = new Date(now.setDate(1)).setMonth(month)
+        const mealtime = moment(newTime).format('YYYYMMDD000000')
+
+        const where = `where mealtime<${mealtime} and status=1`
+        const sql = `select DISTINCT restaurant.id, restaurant.name from restaurant inner join seat on restaurant.id=seat.restaurantId ${where}`
 
         logger.debug(sql)
 
@@ -39,14 +38,14 @@ export default function (router) {
       })
   })
 
-  router.post('/user/order', async function (ctx) {
+  router.get('/restaurants/restaurant', async function (ctx) {
     const { request, logger } = ctx
-    const { seatId, status, contactname, contactmobile, contactinfo, createtime } = request.body
+    const { restaurantId, userId, status, mealtime, seatcount, comments } = request.body
 
     await createConnection(env.mysql)
       .then(conn => {
-        const where = `where username="${username}" and password="${password}" and type="${type}"`
-        const sql = `select id, username, realname, restaurantIds from user ${where}`
+        const values = `${restaurantId}, ${userId}, ${status}, ${mealtime}, ${seatcount}, '${comments}'`
+        const sql = `insert into seat (restaurantId, userId, status, mealtime, seatcount, comments) values (${values})`
 
         logger.debug(sql)
 
@@ -72,5 +71,4 @@ export default function (router) {
   })
 
   return router
-
 }

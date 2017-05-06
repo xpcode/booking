@@ -2,24 +2,14 @@
  * 将fetch函数的response转化为json格式
  */
 export const toJSON = response => {
-  if (response.status !== 200) {
-    const code = process.env.__CLIENT__ === true ? response.status : 500
-    return {
-      code,
-      message: response.text()
-    }
-  }
-
   let json = null
+
   try {
     json = response.json()
   } catch (e) {
     json = {
       code: 500,
-      message: `接口返回格式不是application/json格式`
-    }
-    if (process.env.__CLIENT__ !== true) {
-      // TODO: 此处应有日志
+      message: response.text()
     }
   }
 

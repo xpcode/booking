@@ -7,6 +7,8 @@ import { match } from 'react-router'
 
 import Isomorph from '../common/helpers/Isomorph'
 import routes from '../common/redux/routes'
+import { ACTION_INIT } from '../common/redux/modules/user'
+import './style.less'
 
 const finalState = {}
 const {
@@ -27,6 +29,8 @@ const location = `${pathname}${search}${hash}`
 
 const store = Isomorph.createStore(finalState)
 const history = Isomorph.createHistory(store, pathname)
+
+store.dispatch({ type: ACTION_INIT })
 
 match({ routes, location }, (error, redirectLocation, renderProps) => {
   ReactDOM.render(

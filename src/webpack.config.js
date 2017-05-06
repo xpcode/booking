@@ -7,12 +7,12 @@ var config = {
   entry: [
     'webpack-hot-middleware/client?reload=true',
     'webpack/hot/only-dev-server',
-    './src-restaurant/client/index.js'
+    './src/client/index.js'
   ],
   output: {
     publicPath: 'http://localhost:8082/',
     path: path.join(__dirname, './'),
-    filename: 'static/restaurant/scripts/[name].js'
+    filename: 'static/scripts/[name].js'
   },
   resolve: {
     modulesDirectories: ['node_modules', path.join(__dirname, '../node_modules')],
@@ -49,9 +49,12 @@ var config = {
       ]
     }, {
       test: /\.less$/,
-      loaders: ["style", "css", "postcss", "less"],
-    },
-    {
+      loaders: ["style", "css", "less"],
+    }, {
+      test: /\.css$/,
+      loader: 'css?sourceMap&modules&localIdentName=[local]___[hash:base64:5]!!',
+      exclude: /node_modules/
+    }, {
       test: /\.css$/i,
       loaders: ["style", "css"],
     }]
@@ -63,6 +66,10 @@ var config = {
     pxtorem({ rootValue: 100, propWhiteList: [] })
   ],
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': '"development"',
+      'process.env.__CLIENT__': 'true',
+    }),
     new webpack.HotModuleReplacementPlugin()
   ],
   devServer: {

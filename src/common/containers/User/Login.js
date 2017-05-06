@@ -2,84 +2,125 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Flex, WhiteSpace, List, InputItem, Button } from 'antd-mobile'
+import { List, InputItem, Button, Toast } from 'antd-mobile'
 import { createForm } from 'rc-form'
 
+import { login } from '../../redux/modules/user'
+import ActionStatus from '../../constants/ActionStatus'
+import './Login.less'
+
 const ListItem = List.Item
-const FlexItem = Flex.Item
 
 class Login extends Component {
   constructor(props) {
     super(props)
-  }
 
-  validateAccount = (rule, value, callback) => {
-    if (value && value.length > 4) {
-      callback();
-    } else {
-      callback(new Error('帐号至少4个字符'));
+    const userType = props.user.get('type')
+    if (userType) {
+      location.href = '/'
     }
   }
 
+  validateAccount = (rule, value, callback) => {
+    if (value && value.length >= 4) {
+      callback()
+    } else {
+      callback(new Error('帐号至少4个字符'))
+    }
+  }
+
+  validatePassword = (rule, value, callback) => {
+    if (value && value.length > 4) {
+      callback()
+    } else {
+      callback(new Error('密码至少6个字符'))
+    }
+  }
+
+  handleSubmit = e => {
+    this.props.form.validateFields({ force: true }, (error) => {
+      if (!error) {
+        this.props.login(this.props.form.getFieldsValue())
+      }
+    })
+  }
+
   render() {
-    const { getFieldProps } = this.props.form
+    const { loginStatus, form } = this.props
+    const { getFieldProps, getFieldError } = this.props.form
 
     return (
-      <WingBlank size="sm">
-        <Flex direction="column">
-          <FlexItem flex={5}>
-            Sing.Fish
-        </FlexItem>
-          <FlexItem>
-            <List renderHeader={() => '自定义获取光标'}>
+      <div className="login-container">
+        <div className="login-banner">
+          <h1 className="login-h1">Sing.Fish</h1>
+        </div>
+        <div className="login-form">
+          <form>
+            <List renderFooter={() => getFieldError('username') && getFieldError('username').join(',')}>
+              <InputItem
+                {...getFieldProps('username', {
+                  rules: [
+                    { required: true, message: '请输入帐号' },
+                    { validator: this.validateAccount },
+                  ],
+                }) }
+                clear
+                autoFocus
+                defaultValue="earl"
+                error={!!getFieldError('username')}
+                onErrorClick={() => {
+                  alert(getFieldError('username').join('、'))
+                }}
+                placeholder="请输入账号">
+                帐号
+              </InputItem>
+              <InputItem
+                {...getFieldProps('password', {
+                  rules: [
+                    { required: true, message: '请输入帐号' },
+                    { validator: this.validatePassword },
+                  ],
+                }) }
+                clear
+                defaultValue="666666"
+                error={!!getFieldError('password')}
+                onErrorClick={() => {
+                  alert(getFieldError('password').join('、'))
+                }}
+                placeholder="请输入密码"
+                type="password">
+                密码
+              </InputItem>
               <ListItem>
-                <InputItem
-                  {...getFieldProps('account', {
-                    rules: [
-                      { required: true, message: '请输入帐号' },
-                      { validator: this.validateAccount },
-                    ],
-                  }) }
-                  placeholder="请输入账号"
-                  clear
-                  maxLength={16}
-                  autoFocus
-                >账号</InputItem>
-              </ListItem>
-              <ListItem>
-                <InputItem
-                  {...getFieldProps('password') }
-                  type="password"
-                  placeholder="请输入密码"
-                  clear
-                  maxLength={16}
-                >密码</InputItem>
-              </ListItem>
-              <ListItem>
-                <Button type="primary" onClick={this.onSubmit} inline>提交验证</Button>
+                <Button
+                  type="primary"
+                  disabled={loginStatus === ActionStatus.ING}
+                  loading={loginStatus === ActionStatus.ING}
+                  onClick={this.handleSubmit}>登录</Button>
               </ListItem>
             </List>
-          </FlexItem>
-          <FlexItem>
-            (C)Sing.Fish
-        </FlexItem>
-          <FlexItem>
-            Choose Language
-        </FlexItem>
-        </Flex >
-      </WingBlank>
+          </form>
+        </div>
+        <div className="login-copyright">
+          (C)Sing.Fish
+          </div>
+        <div className="login-chooselan">
+          Choose Language
+          </div>
+      </div >
     )
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    user: state.user
+    loginStatus: state.user.get('loginStatus'),
+    user: state.user.get('user'),
   }
 }
 
 const mapDispatchToProps = {
-
+  login
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(createForm()(Login))

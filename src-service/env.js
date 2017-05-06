@@ -1,7 +1,7 @@
 import path from 'path'
 
 export default {
-  HTTP_SERVER_PORT: 8081,
+  HTTP_SERVER_PORT: 8080,
 
   LOG_DIR: path.join(__dirname, './logs'),
   LOG_LEVEL: 'debug',
