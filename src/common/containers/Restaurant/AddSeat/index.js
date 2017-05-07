@@ -8,7 +8,7 @@ import { createForm } from 'rc-form'
 const ListItem = List.Item
 const FlexItem = Flex.Item
 
-class Login extends Component {
+class AddSeat extends Component {
   constructor(props) {
     super(props)
   }
@@ -99,4 +99,4 @@ const mapDispatchToProps = {
 
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(createForm()(CreateSeat))
+export default connect(mapStateToProps, mapDispatchToProps)(createForm()(AddSeat))

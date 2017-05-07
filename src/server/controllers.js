@@ -33,13 +33,48 @@ router.get('/', function (ctx) {
   }
 })
 
-router.get('/restaurant', function (ctx) {
+
+router.get('/restaurant/schedule', function (ctx) {
+  ctx.render({
+    title: '餐厅席位排期'
+  })
+})
+
+router.get('/restaurant/seats/add', function (ctx) {
+  ctx.render({
+    title: '新增开放席位'
+  })
+})
+
+router.get('/restaurant/seats/todo', function (ctx) {
+  ctx.render({
+    title: '待办列表'
+  })
+})
+
+router.get('/customer/restaurants', function (ctx) {
   ctx.render({
     title: '最新开放席位'
   })
 })
 
+router.get('/customer/restaurants/:restaurantId', function (ctx) {
+  ctx.render({
+    title: '餐厅席位排期'
+  })
+})
 
+router.get('/customer/restaurants/:restaurantId/order', function (ctx) {
+  ctx.render({
+    title: '预定席位'
+  })
+})
+
+router.get('/customer/restaurants/:restaurantId/order', function (ctx) {
+  ctx.render({
+    title: '我预定的席位'
+  })
+})
 
 
 

@@ -4,15 +4,32 @@ import { Route, IndexRoute } from 'react-router'
 import {
   Login,
   MasterAdaptor,
+  RestaurantSchedule,
+  RestaurantAddSeat,
+  RestaurantTodoList,
   RestaurantList,
-  Order
+  FreeSeats,
+  Order,
+  MyOrders,
 } from '../containers'
 
 export default (
   <Route>
     <Route path="login" component={Login} />
     <Route path="/" component={MasterAdaptor}>
-      <Route path="restaurant" component={RestaurantList} />
+      <Route path="restaurant">
+        <Route path="schedule" component={RestaurantSchedule} />
+        <Route path="seats">
+          <Route path="add" component={RestaurantAddSeat} />
+          <Route path="todo" component={RestaurantTodoList} />
+        </Route>
+      </Route>
+      <Route path="customer">
+        <Route path="restaurants" component={RestaurantList} />
+        <Route path="restaurants/:restaurantId" component={FreeSeats} />
+        <Route path="restaurants/:restaurantId/order" component={Order} />
+        <Route path="orders" component={MyOrders} />
+      </Route>
     </Route>
   </Route>
 )
