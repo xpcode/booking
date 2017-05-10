@@ -18,13 +18,17 @@ body {
   margin: 100px auto;
 }
 
-.Calendar-grid {
+.calendar-grid {
   display: flex;
   flex-wrap: wrap;
   width: 100%;
 }
 
-.Calendar-header {
+.calendar-header-item {
+  background: #4E77F4;
+}
+
+.calendar-header {
   height: 50px;
   background: #333;
   color: #fff;
@@ -35,7 +39,7 @@ body {
   justify-content: space-between;
 }
 
-.Calendar-header button {
+.calendar-header button {
   width: 50px;
   font-size: 20px;
   border: 0;
@@ -44,26 +48,38 @@ body {
   cursor: pointer;
 }
 
-.Calendar-grid-item {
+.calendar-grid-item {
   flex: 0 14.28571%;
   text-align: center;
   border-right: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
-  padding: 1rem;
+  padding: 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.Calendar-grid-item.nextMonth,
-.Calendar-grid-item.prevMonth {
+.calendar-grid-item-11 {
+  background: #7FC84E;
+}
+
+.calendar-grid-item-12 {
+  background: #F29C39;
+}
+
+.calendar-grid-item-13 {
+  background: #58C9CA;
+}
+
+.calendar-grid-item.nextMonth,
+.calendar-grid-item.prevMonth {
   color: #999;
 }
 
-.Calendar-grid-item:nth-child(7n+1) {
+.calendar-grid-item:nth-child(7n+1) {
   border-left: 1px solid #ddd;
 }
 
-.Calendar-grid-item:nth-child(-n+7) {
+.calendar-grid-item:nth-child(-n+7) {
   border-top: 1px solid #ddd;
 }

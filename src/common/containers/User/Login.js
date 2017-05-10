@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { List, InputItem, Button, Toast } from 'antd-mobile'
 import { createForm } from 'rc-form'
+import BrowserLocale from 'browser-locale'
 
 import { login } from '../../redux/modules/user'
 import ActionStatus from '../../constants/ActionStatus'
@@ -17,7 +18,11 @@ class Login extends Component {
 
     const userType = props.user.get('type')
     if (userType) {
-      location.href = '/'
+      if (userType === 1) {
+        location.href = '/restaurant/schedule'
+      } else if (userType === 2) {
+        location.href = '/customer/restaurants'
+      }
     }
   }
 

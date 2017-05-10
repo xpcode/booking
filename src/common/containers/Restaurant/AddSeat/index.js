@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Flex, WhiteSpace, List, InputItem, Button } from 'antd-mobile'
+import { Flex, WhiteSpace, WingBlank, List, InputItem, Button, TextareaItem } from 'antd-mobile'
 import { createForm } from 'rc-form'
 
 const ListItem = List.Item

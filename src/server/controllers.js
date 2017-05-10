@@ -26,10 +26,10 @@ router.get('/', function (ctx) {
     ctx.redirect('/login')
   }
   if (user.type === 1) {
-    ctx.redirect('/restaurant')
+    ctx.redirect('/restaurant/schedule')
 
   } else if (user.type === 2) {
-    ctx.redirect('/customer')
+    ctx.redirect('/customer/restaurants')
   }
 })
 

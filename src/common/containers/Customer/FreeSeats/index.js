@@ -6,7 +6,6 @@ import { Flex, WhiteSpace, List, InputItem, Button } from 'antd-mobile'
 
 import { getRestaurantList } from '../../../redux/modules/customer'
 import ActionStatus from '../../../constants/ActionStatus'
-import './RestaurantList.less'
 
 const ListItem = List.Item
 const FlexItem = Flex.Item

@@ -2,11 +2,10 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { WingBlank, Accordion } from 'antd-mobile'
+import { WingBlank, Accordion, List } from 'antd-mobile'
 import { createForm } from 'rc-form'
 
 const ListItem = List.Item
-const FlexItem = Flex.Item
 
 class Login extends Component {
   constructor(props) {

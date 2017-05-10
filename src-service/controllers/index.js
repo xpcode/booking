@@ -7,3 +7,4 @@ export default router
 require('./user').default(router)
 require('./customer').default(router)
 require('./restaurant').default(router)
+require('./sms').default(router)
