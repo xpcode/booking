@@ -8,11 +8,13 @@ export default class Calendar extends Component {
 
   static propTypes = {
     date: PropTypes.object.isRequired,
+    dataSource: PropTypes.object.isRequired,
     onClickDay: PropTypes.func
   }
 
   static defaultProps = {
-    onClickDay: function () { }
+    onClickDay: function () { },
+    dataSource: {}
   }
 
   createDateObjects(date) {
@@ -49,8 +51,11 @@ export default class Calendar extends Component {
   }
 
   renderGridCell(date) {
+    const dataSource = this.props.dataSource
+    const key = date.format('YYYYMMDD')
+
     return (
-      <div key={date.format('x')} className={`calendar-grid-item`} onClick={this.handleClickCell(date)}>
+      <div key={date.format('x')} className={`calendar-grid-item ${dataSource[key]}`} onClick={this.handleClickCell(date)}>
         {date.date()}
       </div>
     )

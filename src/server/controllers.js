@@ -46,7 +46,13 @@ router.get('/restaurant/seats/add', function (ctx) {
   })
 })
 
-router.get('/restaurant/seats/todo', function (ctx) {
+router.get('/restaurant/seats/add/:mealtime', function (ctx) {
+  ctx.render({
+    title: '新增开放席位'
+  })
+})
+
+router.get('/restaurant/schedule/:date', function (ctx) {
   ctx.render({
     title: '待办列表'
   })
@@ -90,7 +96,7 @@ router.all(UNSURE_ROUTE, async function doUnsureHttpRequest(ctx) {
   }
   const options = genFetchOptions(req.method, headers, request.body)
 
-  ctx.logger.info(`参数：${JSON.stringify(request.body)}`)
+  ctx.logger.info(`${url}  ${JSON.stringify(request.body)}`)
 
   await fetch(url, options)
     .then(toJSON, catchException)
@@ -113,7 +119,7 @@ router.all('/api/login', async function doUnsureHttpRequest(ctx) {
   }
   const options = genFetchOptions(req.method, headers, request.body)
 
-  ctx.logger.info(`参数：${JSON.stringify(request.body)}`)
+  ctx.logger.info(`${url}  ${JSON.stringify(request.body)}`)
 
   await fetch(url, options)
     .then(toJSON, catchException)

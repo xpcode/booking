@@ -19,9 +19,9 @@ class Login extends Component {
     const userType = props.user.get('type')
     if (userType) {
       if (userType === 1) {
-        location.href = '/restaurant/schedule'
+        this.props.history.push('/restaurant/schedule')
       } else if (userType === 2) {
-        location.href = '/customer/restaurants'
+        this.props.history.push('/customer/restaurants')
       }
     }
   }
@@ -71,7 +71,6 @@ class Login extends Component {
                 }) }
                 clear
                 autoFocus
-                defaultValue="earl"
                 error={!!getFieldError('username')}
                 onErrorClick={() => {
                   alert(getFieldError('username').join('、'))
@@ -87,7 +86,6 @@ class Login extends Component {
                   ],
                 }) }
                 clear
-                defaultValue="666666"
                 error={!!getFieldError('password')}
                 onErrorClick={() => {
                   alert(getFieldError('password').join('、'))

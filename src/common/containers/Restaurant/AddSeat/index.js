@@ -2,101 +2,149 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Flex, WhiteSpace, WingBlank, List, InputItem, Button, TextareaItem } from 'antd-mobile'
+import { List, InputItem, Button, TextareaItem, DatePicker } from 'antd-mobile'
 import { createForm } from 'rc-form'
+import moment from 'moment'
+
+import { addSeat } from '../../../redux/modules/restaurant'
+import ActionStatus from '../../../constants/ActionStatus'
 
 const ListItem = List.Item
-const FlexItem = Flex.Item
+const minDate = moment().set('date', 1)
+const _maxDate = minDate.clone().set('month', minDate.month() + 2)
+const maxDate = _maxDate.set('date', _maxDate.daysInMonth())
 
 class AddSeat extends Component {
   constructor(props) {
     super(props)
-  }
 
-  validateAccount = (rule, value, callback) => {
-    if (value && value.length > 4) {
-      callback();
-    } else {
-      callback(new Error('帐号至少4个字符'));
+    const { mealtime } = props.params
+
+    this.state = {
+      mealtime
     }
   }
 
+  validateCount = (rule, value, callback) => {
+    if (value && value.length > 0 && value > 0) {
+      callback()
+    } else {
+      callback(new Error('请输入正确的人数'))
+    }
+  }
+
+  onSubmit = () => {
+    const { params, form, addSeat, restaurantIds, history } = this.props
+
+    form.validateFields({ force: true }, (error) => {
+      if (!error) {
+        addSeat({
+          restaurantId: restaurantIds,
+          ...form.getFieldsValue()
+        }).then(() => {
+          history.push('/restaurant/schedule')
+        })
+      }
+    })
+  }
+
+  onCancel = () => {
+    this.props.history.push('/restaurant/schedule')
+  }
+
   render() {
-    const { getFieldProps } = this.props.form
+    const { getFieldProps, getFieldError } = this.props.form
+    const { mealtime } = this.state
+    const initDate = !!mealtime ? moment(mealtime, 'YYYYMMDD') : null
 
     return (
-      <WingBlank size="sm">
-        <Flex direction="column">
-          <FlexItem flex={5}>
+      <div>
+        <div>
+          <div >
             Sing.Fish
-        </FlexItem>
-          <FlexItem>
+          </div>
+          <form>
             <List renderHeader={() => '新增开放席位'}>
-              <ListItem>
-                <InputItem
-                  {...getFieldProps('date', {
-                    rules: [
-                      { required: true, message: '请选择日期' },
-                      { validator: this.validateDate },
-                    ],
-                  }) }
-                  placeholder="请选择日期"
-                  clear
-                  maxLength={11}
-                  autoFocus
-                >日期</InputItem>
-              </ListItem>
-              <ListItem>
-                <InputItem
-                  {...getFieldProps('time') }
-                  placeholder="请选择时间"
-                  clear
-                  maxLength={5}
-                >时间</InputItem>
-              </ListItem>
-              <ListItem>
-                <InputItem
-                  {...getFieldProps('count') }
-                  placeholder="请填写人数"
-                  clear
-                  maxLength={5}
-                >人数</InputItem>
-              </ListItem>
-              <ListItem>
-                <TextareaItem
-                  {...getFieldProps('note3') }
-                  placeholder="请填写备注"
-                  title="备注"
-                  autoHeight
-                  labelNumber={5}
-                />
-              </ListItem>
+              <DatePicker
+                {...getFieldProps('date', {
+                  initialValue: initDate,
+                  rules: [
+                    { required: true, message: '请选择日期' }
+                  ],
+                }) }
+                onErrorClick={() => {
+                  alert(getFieldError('date').join('、'))
+                }}
+                title="选择日期"
+                mode="date"
+                disabled={!!initDate}
+                minDate={minDate}
+                maxDate={maxDate}
+                format={val => val.format('YYYY-MM-DD')}
+              >
+                <ListItem>日期</ListItem>
+              </DatePicker>
+              <DatePicker
+                {...getFieldProps('time', {
+                  rules: [
+                    { required: true, message: '请选择时间' }
+                  ],
+                }) }
+                title="选择时间"
+                mode="time"
+                format={val => val.format('hh:mm')}
+              >
+                <ListItem>时间</ListItem>
+              </DatePicker>
+              <InputItem
+                {...getFieldProps('count', {
+                  rules: [
+                    { required: true, message: '请填写人数' },
+                    { validator: this.validateCount },
+                  ],
+                }) }
+                placeholder="请填写人数"
+                type="number"
+                clear
+                maxLength={3}
+              >
+                <ListItem>人数</ListItem>
+              </InputItem>
+              <TextareaItem
+                {...getFieldProps('comments') }
+                placeholder="请填写备注"
+                title="备注"
+                autoHeight
+                maxLength={500}
+              >
+                <ListItem>备注</ListItem>
+              </TextareaItem>
               <ListItem>
                 <Button onClick={this.onCancel} inline>取消</Button>
                 <Button type="primary" onClick={this.onSubmit} inline>开放席位</Button>
               </ListItem>
             </List>
-          </FlexItem>
-          <FlexItem>
+          </form>
+          <div>
             (C)Sing.Fish
-        </FlexItem>
-          <FlexItem>
+          </div>
+          <div>
             Choose Language
-        </FlexItem>
-        </Flex >
-      </WingBlank>
+          </div>
+        </div >
+      </div>
     )
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    user: state.user
+    restaurantIds: state.user.getIn(['user', 'restaurantIds']),
   }
 }
 
 const mapDispatchToProps = {
-
+  addSeat
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(createForm()(AddSeat))

@@ -19,9 +19,10 @@ export default (
     <Route path="/" component={MasterAdaptor}>
       <Route path="restaurant">
         <Route path="schedule" component={RestaurantSchedule} />
+        <Route path="schedule/:mealtime" component={RestaurantTodoList} />
         <Route path="seats">
           <Route path="add" component={RestaurantAddSeat} />
-          <Route path="todo" component={RestaurantTodoList} />
+          <Route path="add/:mealtime" component={RestaurantAddSeat} />
         </Route>
       </Route>
       <Route path="customer">
