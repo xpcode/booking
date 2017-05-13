@@ -1,19 +1,19 @@
 import moment from 'moment'
+import { createConnection } from 'promise-mysql'
+
+import env from '../env'
 
 export default function (router) {
 
-  router.get('/restaurants', async function (ctx) {
+  router.post('/customer/restaurants', async function (ctx) {
     const { request, logger } = ctx
 
     await createConnection(env.mysql)
       .then(conn => {
-        const now = new Date()
-        const month = now.getMonth() + 3
-        const newTime = new Date(now.setDate(1)).setMonth(month)
-        const mealtime = moment(newTime).format('YYYYMMDD000000')
+        const mealtime = moment().format('YYYYMMDD000000')
 
-        const where = `where mealtime<${mealtime} and status=1`
-        const sql = `select DISTINCT restaurant.id, restaurant.name from restaurant inner join seat on restaurant.id=seat.restaurantId ${where}`
+        const where = `WHERE mealtime>${mealtime} and status=1`
+        const sql = `SELECT DISTINCT restaurant.id, restaurant.name FROM restaurant INNER JOIN seat ON restaurant.id=seat.restaurantId ${where}`
 
         logger.debug(sql)
 
@@ -23,7 +23,7 @@ export default function (router) {
         if (rows.length > 0) {
           ctx.body = {
             code: 200,
-            data: rows[0]
+            data: rows
           }
         } else {
           ctx.body = {
@@ -38,14 +38,14 @@ export default function (router) {
       })
   })
 
-  router.get('/restaurants/restaurant', async function (ctx) {
+  router.post('/customer/restaurants/freeseats', async function (ctx) {
     const { request, logger } = ctx
-    const { restaurantId, userId, status, mealtime, seatcount, comments } = request.body
+    const { minTime, maxTime, restaurantId } = request.body
 
     await createConnection(env.mysql)
       .then(conn => {
-        const values = `${restaurantId}, ${userId}, ${status}, ${mealtime}, ${seatcount}, '${comments}'`
-        const sql = `insert into seat (restaurantId, userId, status, mealtime, seatcount, comments) values (${values})`
+        const where = `WHERE ${minTime}<mealtime AND mealtime<${maxTime} AND seat.restaurantId=${restaurantId}`
+        const sql = `SELECT DISTINCT seat.id, mealtime, restaurantId, seatcount, status, userId, comments FROM seat LEFT JOIN \`user\` ON seat.userId=user.id ${where}`
 
         logger.debug(sql)
 
@@ -55,7 +55,7 @@ export default function (router) {
         if (rows.length > 0) {
           ctx.body = {
             code: 200,
-            data: rows[0]
+            data: rows
           }
         } else {
           ctx.body = {

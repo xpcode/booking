@@ -2,11 +2,10 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Flex, WhiteSpace, List, InputItem, Button } from 'antd-mobile'
+import { List, InputItem, Button, TextareaItem } from 'antd-mobile'
 import { createForm } from 'rc-form'
 
 const ListItem = List.Item
-const FlexItem = Flex.Item
 
 class Order extends Component {
   constructor(props) {
@@ -25,106 +24,104 @@ class Order extends Component {
     const { getFieldProps } = this.props.form
 
     return (
-      <WingBlank size="sm">
-        <Flex direction="column">
-          <FlexItem flex={5}>
-            Sing.Fish
-        </FlexItem>
-          <FlexItem>
-            <List renderHeader={() => '数寄屋桥次郎'}>
-              <ListItem>
-                <InputItem
-                  {...getFieldProps('date', {
-                    rules: [
-                      { required: true, message: '请选择日期' },
-                      { validator: this.validateDate },
-                    ],
-                  }) }
-                  placeholder="请选择日期"
-                  clear
-                  maxLength={11}
-                  autoFocus
-                >日期</InputItem>
-              </ListItem>
-              <ListItem>
-                <InputItem
-                  {...getFieldProps('time') }
-                  placeholder="请选择时间"
-                  clear
-                  maxLength={5}
-                >时间</InputItem>
-              </ListItem>
-              <ListItem>
-                <InputItem
-                  {...getFieldProps('count') }
-                  placeholder="请填写人数"
-                  clear
-                  maxLength={5}
-                >人数</InputItem>
-              </ListItem>
-              <ListItem>
-                <InputItem
-                  {...getFieldProps('count') }
-                  placeholder="请填写姓名"
-                  clear
-                  maxLength={5}
-                >人数</InputItem>
-              </ListItem>
-              <ListItem>
-                <InputItem
-                  {...getFieldProps('count') }
-                  placeholder="请填写联系方式"
-                  clear
-                  maxLength={5}
-                >人数</InputItem>
-              </ListItem>
-              <ListItem>
-                <InputItem
-                  {...getFieldProps('count') }
-                  placeholder="请填写信用卡号"
-                  clear
-                  maxLength={5}
-                >人数</InputItem>
-              </ListItem>
-              <ListItem>
-                <InputItem
-                  {...getFieldProps('count') }
-                  placeholder="请填写信用卡有效期（MM/YY)"
-                  clear
-                  maxLength={5}
-                >人数</InputItem>
-              </ListItem>
-              <ListItem>
-                <InputItem
-                  {...getFieldProps('count') }
-                  placeholder="请填写信用卡安全码"
-                  clear
-                  maxLength={5}
-                >人数</InputItem>
-              </ListItem>
-              <ListItem>
-                <TextareaItem
-                  {...getFieldProps('note3') }
-                  placeholder="请填写备注"
-                  title="备注"
-                  autoHeight
-                  labelNumber={5}
-                />
-              </ListItem>
-              <ListItem>
-                <Button onClick={this.onCancel} inline>取消</Button>
-                <Button type="primary" onClick={this.onSubmit} inline>开放席位</Button>
-              </ListItem>
-            </List>
-          </FlexItem>
-          <FlexItem>
-            (C)Sing.Fish
-        </FlexItem>
-          <FlexItem>
-            Choose Language
-        </FlexItem>
-        </Flex >
-      </WingBlank>
+      <div>
+        <div>
+          Sing.Fish
+        </div>
+        <div>
+          <List renderHeader={() => '数寄屋桥次郎'}>
+            <ListItem>
+              <InputItem
+                {...getFieldProps('date', {
+                  rules: [
+                    { required: true, message: '请选择日期' },
+                    { validator: this.validateDate },
+                  ],
+                }) }
+                placeholder="请选择日期"
+                clear
+                maxLength={11}
+                autoFocus
+              >日期</InputItem>
+            </ListItem>
+            <ListItem>
+              <InputItem
+                {...getFieldProps('time') }
+                placeholder="请选择时间"
+                clear
+                maxLength={5}
+              >时间</InputItem>
+            </ListItem>
+            <ListItem>
+              <InputItem
+                {...getFieldProps('count') }
+                placeholder="请填写人数"
+                clear
+                maxLength={5}
+              >人数</InputItem>
+            </ListItem>
+            <ListItem>
+              <InputItem
+                {...getFieldProps('count') }
+                placeholder="请填写姓名"
+                clear
+                maxLength={5}
+              >姓名</InputItem>
+            </ListItem>
+            <ListItem>
+              <InputItem
+                {...getFieldProps('count') }
+                placeholder="请填写联系方式"
+                clear
+                maxLength={5}
+              >联系方式</InputItem>
+            </ListItem>
+            <ListItem>
+              <InputItem
+                {...getFieldProps('count') }
+                placeholder="请填写信用卡号"
+                clear
+                maxLength={5}
+              >信用卡号</InputItem>
+            </ListItem>
+            <ListItem>
+              <InputItem
+                {...getFieldProps('count') }
+                placeholder="请填写信用卡有效期（MM/YY)"
+                clear
+                maxLength={5}
+              >有效期（MM/YY)</InputItem>
+            </ListItem>
+            <ListItem>
+              <InputItem
+                {...getFieldProps('count') }
+                placeholder="请填写信用卡安全码"
+                clear
+                maxLength={5}
+              >安全码</InputItem>
+            </ListItem>
+            <ListItem>
+              <TextareaItem
+                {...getFieldProps('note3') }
+                placeholder="请填写备注"
+                title="备注"
+                autoHeight
+                labelNumber={5}
+              />
+            </ListItem>
+            <ListItem>
+              <Button onClick={this.onCancel} inline>取消</Button>
+              <Button type="primary" onClick={this.onSubmit} inline>开放席位</Button>
+            </ListItem>
+          </List>
+        </div>
+        <div>
+          (C)Sing.Fish
+        </div>
+        <div>
+          Choose Language
+        </div>
+      </div >
     )
   }
 }

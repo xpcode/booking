@@ -12,6 +12,7 @@ export default {
   LOG_LEVEL: 'debug',
   AUTH_WHITELIST: [
     '/login',
+    '/logout',
     '/api/login'
   ]
 }

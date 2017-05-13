@@ -5,11 +5,12 @@ export default {
   },
 
   HTTP_LOGIN: '/api/login',
-  HTTP_GETRESTAURANTLIST: gen('restaurants'),
   HTTP_ADD_SEAT: gen('restaurants/restaurant/seats/add'),
   HTTP_UPDATE_SEAT_STATUS: gen('restaurant/seat/updatestatus'),
   HTTP_GET_SCHEDULE: gen('restaurants/restaurant/schedule'),
   HTTP_GET_TODOLIST: gen('restaurants/restaurant/todolist'),
+  HTTP_GET_RESTAURANTLIST: gen('restaurants'),
+  HTTP_GET_TFREESEATS: gen('customer/restaurants/freeseats'),
 }
 
 export function combine(baseurl, pathname) {

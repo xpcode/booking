@@ -14,6 +14,17 @@ router.get('/login', function (ctx) {
   })
 })
 
+router.get('/logout', function (ctx) {
+  const expires = new Date(Date.now() - 365 * 24 * 3600 * 1000)
+
+  ctx.cookies.set('user', encodeURIComponent(JSON.stringify({})), {
+    path: '/',
+    expires,
+    httpOnly: false,
+  })
+  ctx.redirect('/login')
+})
+
 router.get('/', function (ctx) {
   const userCooke = ctx.cookies.get('user')
   const user = {}

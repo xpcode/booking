@@ -2,14 +2,13 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Flex, WhiteSpace, List, InputItem, Button } from 'antd-mobile'
+import { List, Button } from 'antd-mobile'
 
 import { getRestaurantList } from '../../../redux/modules/customer'
 import ActionStatus from '../../../constants/ActionStatus'
 import './RestaurantList.less'
 
 const ListItem = List.Item
-const FlexItem = Flex.Item
 
 class RestaurantList extends Component {
   constructor(props) {
@@ -20,6 +19,10 @@ class RestaurantList extends Component {
     this.props.getRestaurantList()
   }
 
+  handleSubmit() {
+
+  }
+
   render() {
     return (
       <div className="restaurantlist">
@@ -27,9 +30,15 @@ class RestaurantList extends Component {
           Sing.Fish
         </h1>
         <List renderHeader={() => '最新开放席位'}>
-          <ListItem>
-            Restaurant
-          </ListItem>
+          {
+            this.props.restaurantList.map(item => {
+              return (
+                <ListItem>
+                  <a href={'/customer/restaurants/' + item.id}>{item.name}</a>
+                </ListItem>
+              )
+            })
+          }
         </List>
         <div className="footer">
           <Button type="primary" onClick={this.handleSubmit}>我的预定</Button>
@@ -41,7 +50,7 @@ class RestaurantList extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    user: state.user
+    restaurantList: state.customer.get('restaurantList')
   }
 }
 

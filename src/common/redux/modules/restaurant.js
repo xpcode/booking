@@ -83,22 +83,11 @@ export const ACTION_GET_SCHEDULE_FAILURE = 'ACTION_GET_SCHEDULE_FAILURE'
 export const getSchedule = (seatInfo) => {
   return (dispatch, getState) => {
     const url = env.HTTP_GET_SCHEDULE
-    const minTime = moment()
-      .set('date', 1)
-      .set('hour', 0)
-      .set('minute', 0)
-      .set('second', 0)
-    const _maxTime = minTime.clone().set('month', minTime.month() + 2)
-    const maxTime = _maxTime
-      .set('date', _maxTime.daysInMonth())
-      .set('hour', 23)
-      .set('minute', 59)
-      .set('second', 59)
-    const format = 'YYYYMMDDhhmmss'
+    const { minTime, maxTime } = genLeast3MonthTimeRange()
     const restaurantId = getState().user.getIn(['user', 'restaurantIds'])
     const options = genFetchOptions('post', {
-      minTime: minTime.format(format),
-      maxTime: maxTime.format(format),
+      minTime,
+      maxTime,
       restaurantId
     })
 

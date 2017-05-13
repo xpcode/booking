@@ -5,16 +5,20 @@ import './Master.less'
 
 class MasterAdaptor extends Component {
   render() {
-    const { children } = this.props
-    const userType = this.props.user.get('type')
+    const { children, user } = this.props
+    const userType = user.get('type')
 
     if (userType === 1) {
       return this.renderRestaurantMaster()
     }
 
     return (
-      <div>
-        {children}
+      <div className="master-warpper">
+        <div className="header">
+          <h1>{user.get('realname') || user.get('username')}</h1>
+          <a href="/logout">登出</a>
+        </div>
+        {this.props.children}
       </div>
     )
   }
@@ -23,7 +27,7 @@ class MasterAdaptor extends Component {
     return (
       <div className="master-warpper">
         <div className="header">
-          <h1>KKK</h1>
+          <h1>{user.get('realname') || user.get('username')}</h1>
           <a href="/logout">登出</a>
         </div>
         {this.props.children}

@@ -72,3 +72,22 @@ export const genAction = (type, payload) => {
  * 一个空函数
  */
 export const doNothing = () => { }
+
+export const genLeast3MonthTimeRange = () => {
+  const format = 'YYYYMMDDhhmmss'
+  const minTime = moment()
+    .set('date', 1)
+    .set('hour', 0)
+    .set('minute', 0)
+    .set('second', 0)
+  const _maxTime = minTime.clone().set('month', minTime.month() + 2)
+  const maxTime = _maxTime
+    .set('date', _maxTime.daysInMonth())
+    .set('hour', 23)
+    .set('minute', 59)
+    .set('second', 59)
+  return {
+    minTime: minTime.format(format),
+    maxTime: maxTime.format(format),
+  }
+}

@@ -71,7 +71,7 @@ export const login = ({ username, password }) => {
 
           dispatch(genAction(ACTION_LOGIN_SUCCEED, user))
 
-          location.href = '/user'
+          location.href = '/customer/restaurants'
         } else {
           dispatch(genAction(ACTION_LOGIN_FAILURE))
           Toast.fail(json.message, 2)
