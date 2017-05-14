@@ -20,11 +20,12 @@ class MyOrderList extends Component {
   }
 
   renderMyOrderList() {
+    // 状态  1:待确认 2:已确认 3:席位已取消
     return this.props.myorders.map(item => {
       const title = {
-        1: '待预定',
-        2: '待确认',
-        4: '已取消',
+        1: '待确认',
+        2: '已确认',
+        4: '席位已取消',
       }[item.status] || item.contactname
       const header = (
         <div className="span4">
