@@ -87,7 +87,7 @@ router.get('/customer/restaurants/:restaurantId/:mealtime', function (ctx) {
   })
 })
 
-router.get('/customer/restaurants/:restaurantId/order', function (ctx) {
+router.get('/customer/myorders', function (ctx) {
   ctx.render({
     title: '我预定的席位'
   })

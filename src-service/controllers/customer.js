@@ -104,6 +104,39 @@ export default function (router) {
       })
   })
 
+  router.post('/customer/myorders', async function (ctx) {
+    const { request, logger } = ctx
+    const { userId } = request.body
+
+    await createConnection(env.mysql)
+      .then(conn => {
+        const where = `WHERE o.userId=${userId}`
+        const sql = `SELECT o.id, o.contactname, o.contactmobile, o.status, restaurant.name restaurantName, seat.mealtime, seat.seatcount, seat.comments
+FROM \`order\` o INNER JOIN seat ON o.seatId=seat.id INNER JOIN restaurant ON restaurant.id=seat.restaurantId ${where}`
+
+        logger.debug(sql)
+
+        return conn.query(sql)
+
+      }).then(rows => {
+        if (rows.length >= 0) {
+          ctx.body = {
+            code: 200,
+            data: rows
+          }
+        } else {
+          ctx.body = {
+            code: 201
+          }
+        }
+
+      }).catch(error => {
+        ctx.body = {
+          code: 500
+        }
+      })
+  })
+
   router.post('/customer/addorder', async function (ctx) {
     const { request, logger } = ctx
     const { seatId, contactname, contactmobile, contactinfo } = request.body

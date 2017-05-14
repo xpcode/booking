@@ -2,50 +2,74 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Flex, WhiteSpace, List, InputItem, Button } from 'antd-mobile'
+import { Accordion, List, InputItem, Button } from 'antd-mobile'
+import moment from 'moment'
 
-import { getRestaurantList } from '../../../redux/modules/customer'
+import { getMyOrderList } from '../../../redux/modules/customer'
 import ActionStatus from '../../../constants/ActionStatus'
 
 const ListItem = List.Item
-const FlexItem = Flex.Item
 
-class RestaurantList extends Component {
+class MyOrderList extends Component {
   constructor(props) {
     super(props)
   }
 
   componentDidMount() {
-    this.props.getRestaurantList()
+    this.props.getMyOrderList()
+  }
+
+  renderMyOrderList() {
+    return this.props.myorders.map(item => {
+      const title = {
+        1: '待预定',
+        2: '待确认',
+        4: '已取消',
+      }[item.status] || item.contactname
+      const header = (
+        <div className="span4">
+          <span className="span1">{moment(item.mealtime, 'YYYYMMDDhhmmss').format('hh:mm')}</span>
+          <span className="span3">{title}</span>
+          <span className="span2">{item.restaurantName}</span>
+        </div>
+      )
+      return (
+        <Accordion.Panel header={header} key={item.id}>
+          <List className="my-list">
+            <div>
+              <List.Item>姓名：{item.contactname}</List.Item>
+              <List.Item>人数：{item.seatcount}</List.Item>
+              <List.Item>联系方式：{item.contactmobile}</List.Item>
+              <List.Item>备注：{item.comments}</List.Item>
+            </div>
+          </List>
+        </Accordion.Panel>
+      )
+    })
   }
 
   render() {
     return (
-      <div className="restaurantlist">
-        <h1>
-          Sing.Fish
-        </h1>
-        <List renderHeader={() => '最新开放席位'}>
-          <ListItem>
-            Restaurant
-          </ListItem>
-        </List>
-        <div className="footer">
-          <Button type="primary" onClick={this.handleSubmit}>我的预定</Button>
+      <div>
+        <Accordion accordion openAnimation={{}} className="my-accordion" onChange={this.onChange}>
+          {this.renderMyOrderList()}
+        </Accordion>
+        <div className="btn-fixed-wrapper">
+          <Button type="primary" onClick={this.onCallback}>返回</Button>
         </div>
-      </div >
+      </div>
     )
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    user: state.user
+    myorders: state.customer.get('myorders')
   }
 }
 
 const mapDispatchToProps = {
-  getRestaurantList
+  getMyOrderList
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(RestaurantList)
+export default connect(mapStateToProps, mapDispatchToProps)(MyOrderList)

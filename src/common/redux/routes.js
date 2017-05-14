@@ -29,7 +29,7 @@ export default (
         <Route path="restaurants" component={RestaurantList} />
         <Route path="restaurants/:restaurantId" component={FreeSeats} />
         <Route path="restaurants/:restaurantId/:mealtime" component={Order} />
-        <Route path="orders" component={MyOrders} />
+        <Route path="myorders" component={MyOrders} />
       </Route>
     </Route>
   </Route>

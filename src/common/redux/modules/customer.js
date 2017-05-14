@@ -10,7 +10,8 @@ import { toJSON, auth, catchException, genAction, genFetchOptions, genLeast3Mont
 const $$initialState = Immutable.fromJS({
   restaurantList: [],
   freeSeats: {},
-  timeList: []
+  timeList: [],
+  myorders: []
 })
 
 
@@ -40,6 +41,9 @@ export default ($$state = $$initialState, action) => {
           value: item.id
         }
       })))
+
+    case ACTION_GET_MYORDERLIST_SUCCEED:
+      return $$state.set('myorders', action.payload)
 
     default:
       return $$state
@@ -126,6 +130,33 @@ export const getTimeList = (restaurantId, mealtime) => {
   }
 }
 
+export const ACTION_GET_MYORDERLIST = 'ACTION_GET_MYORDERLIST'
+export const ACTION_GET_MYORDERLIST_SUCCEED = 'ACTION_GET_MYORDERLIST_SUCCEED'
+export const ACTION_GET_MYORDERLIST_FAILURE = 'ACTION_GET_MYORDERLIST_FAILURE'
+
+export const getMyOrderList = () => {
+  return (dispatch, getState) => {
+    const url = env.HTTP_GET_MYORDERLIST
+    const userId = getState().user.getIn(['user', 'id'])
+    const options = genFetchOptions('post', {
+      userId
+    })
+
+    fetch(url, options)
+      .then(toJSON, catchException)
+      .then(function (json) {
+        if (json.code === 200) {
+          const list = json.data
+
+          dispatch(genAction(ACTION_GET_MYORDERLIST_SUCCEED, list))
+        } else {
+          dispatch(genAction(ACTION_GET_MYORDERLIST_FAILURE))
+          Toast.info(json.message || '请求失败', 2)
+        }
+      })
+  }
+}
+
 export const ACTION_ADD_ORDER = 'ACTION_ADD_ORDER'
 export const ACTION_ADD_ORDER_SUCCEED = 'ACTION_ADD_ORDER_SUCCEED'
 export const ACTION_ADD_ORDER_FAILURE = 'ACTION_ADD_ORDER_FAILURE'
@@ -151,7 +182,7 @@ export const addOrder = (orderInfo) => {
           const list = json.data
 
           dispatch(genAction(ACTION_ADD_ORDER_SUCCEED))
-          location.href = '/customer/orders'
+          location.href = '/customer/myorders'
         } else {
           dispatch(genAction(ACTION_ADD_ORDER_FAILURE))
           Toast.info(json.message || '请求失败', 2)

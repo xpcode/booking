@@ -13,6 +13,7 @@ export default {
   HTTP_GET_TFREESEATS: gen('customer/restaurants/freeseats'),
   HTTP_GET_TIMELIST: gen('customer/restaurants/timelist'),
   HTTP_ADD_ORDER: gen('customer/addorder'),
+  HTTP_GET_MYORDERLIST: gen('customer/myorders'),
 }
 
 export function combine(baseurl, pathname) {
