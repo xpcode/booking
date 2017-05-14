@@ -33,7 +33,7 @@ class RestaurantList extends Component {
           {
             this.props.restaurantList.map(item => {
               return (
-                <ListItem>
+                <ListItem key={item.id}>
                   <a href={'/customer/restaurants/' + item.id}>{item.name}</a>
                 </ListItem>
               )

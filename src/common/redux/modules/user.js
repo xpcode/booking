@@ -71,10 +71,15 @@ export const login = ({ username, password }) => {
 
           dispatch(genAction(ACTION_LOGIN_SUCCEED, user))
 
-          location.href = '/customer/restaurants'
+          if (user.type === 1) {
+            location.href = '/restaurant/schedule'
+          } else if (user.type === 2) {
+            location.href = '/customer/restaurants'
+          }
+
         } else {
           dispatch(genAction(ACTION_LOGIN_FAILURE))
-          Toast.fail(json.message, 2)
+          Toast.info(json.message || '请求失败', 2)
         }
       })
   }

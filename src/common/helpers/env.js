@@ -9,8 +9,10 @@ export default {
   HTTP_UPDATE_SEAT_STATUS: gen('restaurant/seat/updatestatus'),
   HTTP_GET_SCHEDULE: gen('restaurants/restaurant/schedule'),
   HTTP_GET_TODOLIST: gen('restaurants/restaurant/todolist'),
-  HTTP_GET_RESTAURANTLIST: gen('restaurants'),
+  HTTP_GET_RESTAURANTLIST: gen('customer/restaurants'),
   HTTP_GET_TFREESEATS: gen('customer/restaurants/freeseats'),
+  HTTP_GET_TIMELIST: gen('customer/restaurants/timelist'),
+  HTTP_ADD_ORDER: gen('customer/addorder'),
 }
 
 export function combine(baseurl, pathname) {

@@ -9,7 +9,7 @@ class MasterAdaptor extends Component {
     const userType = user.get('type')
 
     if (userType === 1) {
-      return this.renderRestaurantMaster()
+      return this.renderRestaurantMaster(user)
     }
 
     return (
@@ -23,7 +23,7 @@ class MasterAdaptor extends Component {
     )
   }
 
-  renderRestaurantMaster() {
+  renderRestaurantMaster(user) {
     return (
       <div className="master-warpper">
         <div className="header">

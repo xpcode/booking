@@ -32,7 +32,8 @@ class RestaurantList extends Component {
 
   handleClickDate = (date) => {
     const restaurantId = this.state.restaurantId
-    this.props.history.push(`/customer/restaurants/${restaurantId}/order`)
+    const mealtime = date.format('YYYYMMDD')
+    this.props.history.push(`/customer/restaurants/${restaurantId}/${mealtime}`)
   }
 
   render() {
@@ -56,8 +57,8 @@ class RestaurantList extends Component {
           </div>
         </div>
         <div className="btn-fixed-wrapper">
-          <Button type="primary" onClick={this.handleAddSeat}>+ 添加席位</Button>
-        </div>
+          <Button type="primary" onClick={() => this.props.history.go(-1)}>返回</Button>
+      </div>
       </div >
     )
   }
@@ -65,7 +66,7 @@ class RestaurantList extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    freeSeats: state.restaurant.get('freeSeats')
+    freeSeats: state.customer.get('freeSeats')
   }
 }
 

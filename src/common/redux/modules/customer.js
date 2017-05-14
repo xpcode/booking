@@ -9,13 +9,14 @@ import { toJSON, auth, catchException, genAction, genFetchOptions, genLeast3Mont
 
 const $$initialState = Immutable.fromJS({
   restaurantList: [],
-  freeSeats: {}
+  freeSeats: {},
+  timeList: []
 })
 
 
 export default ($$state = $$initialState, action) => {
   switch (action.type) {
-    case ACTION_GETRESTAURANTLIST_SUCCEED:
+    case ACTION_GETFREESEATS_SUCCEED:
       const freeSeats = {}
       // 状态  1:待预定 2:已预定 3:已确定 4:已取消
       action.payload.forEach(item => {
@@ -29,8 +30,16 @@ export default ($$state = $$initialState, action) => {
       })
       return $$state.set('freeSeats', freeSeats)
 
-    case ACTION_GETFREESEATS_SUCCEED:
+    case ACTION_GETRESTAURANTLIST_SUCCEED:
       return $$state.set('restaurantList', action.payload)
+
+    case ACTION_GET_TIMELIST_SUCCEED:
+      return $$state.set('timeList', Immutable.fromJS(action.payload.map(item => {
+        return {
+          label: moment(item.mealtime, 'YYYYMMDDhhmmss').format('hh:mm'),
+          value: item.id
+        }
+      })))
 
     default:
       return $$state
@@ -55,7 +64,7 @@ export const getRestaurantList = () => {
           dispatch(genAction(ACTION_GETRESTAURANTLIST_SUCCEED, list))
         } else {
           dispatch(genAction(ACTION_GETRESTAURANTLIST_FAILURE))
-          Toast.fail(json.message, 2)
+          Toast.info(json.message || '请求失败', 2)
         }
       })
   }
@@ -84,7 +93,68 @@ export const getFreeSeats = (restaurantId) => {
           dispatch(genAction(ACTION_GETFREESEATS_SUCCEED, list))
         } else {
           dispatch(genAction(ACTION_GETFREESEATS_FAILURE))
-          Toast.fail(json.message, 2)
+          Toast.info(json.message || '请求失败', 2)
+        }
+      })
+  }
+}
+
+export const ACTION_GET_TIMELIST = 'ACTION_GET_TIMELIST'
+export const ACTION_GET_TIMELIST_SUCCEED = 'ACTION_GET_TIMELIST_SUCCEED'
+export const ACTION_GET_TIMELIST_FAILURE = 'ACTION_GET_TIMELIST_FAILURE'
+
+export const getTimeList = (restaurantId, mealtime) => {
+  return (dispatch, getState) => {
+    const url = env.HTTP_GET_TIMELIST
+    const options = genFetchOptions('post', {
+      mealtime,
+      restaurantId
+    })
+
+    fetch(url, options)
+      .then(toJSON, catchException)
+      .then(function (json) {
+        if (json.code === 200) {
+          const list = json.data
+
+          dispatch(genAction(ACTION_GET_TIMELIST_SUCCEED, list))
+        } else {
+          dispatch(genAction(ACTION_GET_TIMELIST_FAILURE))
+          Toast.info(json.message || '请求失败', 2)
+        }
+      })
+  }
+}
+
+export const ACTION_ADD_ORDER = 'ACTION_ADD_ORDER'
+export const ACTION_ADD_ORDER_SUCCEED = 'ACTION_ADD_ORDER_SUCCEED'
+export const ACTION_ADD_ORDER_FAILURE = 'ACTION_ADD_ORDER_FAILURE'
+
+export const addOrder = (orderInfo) => {
+  return (dispatch, getState) => {
+    const url = env.HTTP_ADD_ORDER
+    const options = genFetchOptions('post', {
+      seatId: orderInfo.seatId,
+      contactname: orderInfo.contactname,
+      contactmobile: orderInfo.contactmobile,
+      contactinfo: JSON.stringify({
+        cardNO: orderInfo.cardNO,
+        cardExpires: orderInfo.cardExpires,
+        cardCode: orderInfo.cardCode,
+      })
+    })
+
+    fetch(url, options)
+      .then(toJSON, catchException)
+      .then(function (json) {
+        if (json.code === 200) {
+          const list = json.data
+
+          dispatch(genAction(ACTION_ADD_ORDER_SUCCEED))
+          location.href = '/customer/orders'
+        } else {
+          dispatch(genAction(ACTION_ADD_ORDER_FAILURE))
+          Toast.info(json.message || '请求失败', 2)
         }
       })
   }

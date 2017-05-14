@@ -5,7 +5,7 @@ import { Toast } from 'antd-mobile'
 
 import env from '../../helpers/env'
 import ActionStatus from '../../constants/ActionStatus'
-import { toJSON, auth, catchException, genAction, genFetchOptions } from '../../helpers/util'
+import { toJSON, auth, catchException, genAction, genFetchOptions, genLeast3MonthTimeRange } from '../../helpers/util'
 
 const $$initialState = Immutable.fromJS({
   schedule: {},
@@ -70,7 +70,7 @@ export const addSeat = (seatInfo) => {
           dispatch(genAction(ACTION_ADD_SEAT_SUCCEED, list))
         } else {
           dispatch(genAction(ACTION_ADD_SEAT_FAILURE))
-          Toast.fail(json.message, 2)
+          Toast.info(json.message || '请求失败', 2)
         }
       })
   }
@@ -100,7 +100,7 @@ export const getSchedule = (seatInfo) => {
           dispatch(genAction(ACTION_GET_SCHEDULE_SUCCEED, list))
         } else {
           dispatch(genAction(ACTION_GET_SCHEDULE_FAILURE))
-          Toast.fail(json.message, 2)
+          Toast.info(json.message || '请求失败', 2)
         }
       })
   }
@@ -114,6 +114,7 @@ export const getTodoList = (date) => {
   return (dispatch, getState) => {
     const url = env.HTTP_GET_TODOLIST
     const restaurantId = getState().user.getIn(['user', 'restaurantIds'])
+
     const options = genFetchOptions('post', {
       date,
       restaurantId
@@ -128,7 +129,7 @@ export const getTodoList = (date) => {
           dispatch(genAction(ACTION_GET_TODOLIST_SUCCEED, list))
         } else {
           dispatch(genAction(ACTION_GET_TODOLIST_FAILURE))
-          Toast.fail(json.message, 2)
+          Toast.info(json.message || '请求失败', 2)
         }
       })
   }
@@ -156,7 +157,7 @@ export const updateStatus = (seatId, status) => {
           }))
         } else {
           dispatch(genAction(ACTION_UPDATE_SEATSTATUS_FAILURE))
-          Toast.fail(json.message, 2)
+          Toast.info(json.message || '请求失败', 2)
         }
       })
   }

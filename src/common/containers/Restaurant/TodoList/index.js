@@ -48,7 +48,7 @@ class Login extends Component {
         </div>
       )
       return (
-        <Accordion.Panel header={header}>
+        <Accordion.Panel header={header} key={item.id}>
           <List className="my-list">
             {
               (item.status === 2 || item.status === 3) && (
@@ -90,7 +90,7 @@ class Login extends Component {
           {this.renderTodoList()}
         </Accordion>
         <div className="btn-fixed-wrapper">
-          <Button type="primary" onClick={this.handleAddSeat}>返回</Button>
+          <Button type="primary" onClick={this.onCallback}>返回</Button>
         </div>
       </WingBlank>
     )

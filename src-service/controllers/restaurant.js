@@ -51,7 +51,7 @@ export default function (router) {
         return conn.query(sql)
 
       }).then(rows => {
-        if (rows.length > 0) {
+        if (rows.length >= 0) {
           ctx.body = {
             code: 200,
             data: rows
@@ -77,7 +77,7 @@ export default function (router) {
 
     await createConnection(env.mysql)
       .then(conn => {
-        const where = `WHERE ${minTime}<seat.mealtime AND seat.mealtime<${maxTime} AND seat.restaurantId=1`
+        const where = `WHERE ${minTime}<seat.mealtime AND seat.mealtime<${maxTime} AND seat.restaurantId=${restaurantId}`
         const sql = `SELECT DISTINCT seat.id, order.contactname, seat.mealtime, seat.seatcount, seat.status, seat.comments FROM seat
 LEFT JOIN \`order\` ON seat.id=order.seatId
 LEFT JOIN \`user\` ON seat.userId=user.id ${where}`
@@ -87,7 +87,7 @@ LEFT JOIN \`user\` ON seat.userId=user.id ${where}`
         return conn.query(sql)
 
       }).then(rows => {
-        if (rows.length > 0) {
+        if (rows.length >= 0) {
           ctx.body = {
             code: 200,
             data: rows
