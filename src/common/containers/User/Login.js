@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
+import cookies from 'cookies-js'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { List, InputItem, Button, Toast } from 'antd-mobile'
 import { createForm } from 'rc-form'
-import BrowserLocale from 'browser-locale'
+import { injectIntl, FormattedMessage } from 'react-intl'
 
 import { login } from '../../redux/modules/user'
 import ActionStatus from '../../constants/ActionStatus'
@@ -13,117 +14,137 @@ import './Login.less'
 const ListItem = List.Item
 
 class Login extends Component {
-  constructor(props) {
-    super(props)
+    constructor(props) {
+        super(props)
 
-    const userType = props.user.get('type')
-    if (userType) {
-      if (userType === 1) {
-        this.props.history.push('/restaurant/schedule')
-      } else if (userType === 2) {
-        this.props.history.push('/customer/restaurants')
-      }
+        const userType = props.user.get('type')
+        if (userType) {
+            if (userType === 1) {
+                this.props.history.push('/restaurant/schedule')
+            } else if (userType === 2) {
+                this.props.history.push('/customer/restaurants')
+            }
+        }
     }
-  }
 
-  validateAccount = (rule, value, callback) => {
-    if (value && value.length >= 4) {
-      callback()
-    } else {
-      callback(new Error('帐号至少4个字符'))
+    validateAccount = (rule, value, callback) => {
+        if (value && value.length >= 4) {
+            callback()
+        } else {
+            callback(new Error('帐号至少4个字符'))
+        }
     }
-  }
 
-  validatePassword = (rule, value, callback) => {
-    if (value && value.length > 4) {
-      callback()
-    } else {
-      callback(new Error('密码至少6个字符'))
+    validatePassword = (rule, value, callback) => {
+        if (value && value.length > 4) {
+            callback()
+        } else {
+            callback(new Error('密码至少6个字符'))
+        }
     }
-  }
 
-  handleSubmit = e => {
-    this.props.form.validateFields({ force: true }, (error) => {
-      if (!error) {
-        this.props.login(this.props.form.getFieldsValue())
-      }
-    })
-  }
+    handleSubmit = e => {
+        this.props.form.validateFields({ force: true }, (error) => {
+            if (!error) {
+                this.props.login(this.props.form.getFieldsValue())
+            }
+        })
+    }
 
-  render() {
-    const { loginStatus, form } = this.props
-    const { getFieldProps, getFieldError } = this.props.form
+    handleSetLanguage = lang => {
+        return e => {
+            const expires = new Date(2027)
 
-    return (
-      <div className="login-container">
-        <div className="login-banner">
-          <h1 className="login-h1">Sing.Fish</h1>
-        </div>
-        <div className="login-form">
-          <form>
-            <List renderFooter={() => getFieldError('username') && getFieldError('username').join(',')}>
-              <InputItem
-                {...getFieldProps('username', {
-                  rules: [
-                    { required: true, message: '请输入帐号' },
-                    { validator: this.validateAccount },
-                  ],
-                }) }
-                clear
-                autoFocus
-                error={!!getFieldError('username')}
-                onErrorClick={() => {
-                  alert(getFieldError('username').join('、'))
-                }}
-                placeholder="请输入账号">
-                帐号
-              </InputItem>
-              <InputItem
-                {...getFieldProps('password', {
-                  rules: [
-                    { required: true, message: '请输入帐号' },
-                    { validator: this.validatePassword },
-                  ],
-                }) }
-                clear
-                error={!!getFieldError('password')}
-                onErrorClick={() => {
-                  alert(getFieldError('password').join('、'))
-                }}
-                placeholder="请输入密码"
-                type="password">
-                密码
-              </InputItem>
-              <ListItem>
-                <Button
-                  type="primary"
-                  disabled={loginStatus === ActionStatus.ING}
-                  loading={loginStatus === ActionStatus.ING}
-                  onClick={this.handleSubmit}>登录</Button>
-              </ListItem>
-            </List>
-          </form>
-        </div>
-        <div className="login-copyright">
-          (C)Sing.Fish
-          </div>
-        <div className="login-chooselan">
-          Choose Language
-          </div>
-      </div >
-    )
-  }
+            cookies.set('lang', encodeURIComponent(lang, {
+                path: '/',
+                expires,
+                httpOnly: false,
+            }))
+            location = location
+        }
+    }
+
+    render() {
+        const { loginStatus, form, intl } = this.props
+        const { getFieldProps, getFieldError } = this.props.form
+
+        return (
+            <div className="login-container">
+                <div className="login-banner">
+                    <h1 className="login-h1">Sing.Fish</h1>
+                </div>
+                <div className="login-form">
+                    <form>
+                        <List renderFooter={() => getFieldError('username') && getFieldError('username').join(',')}>
+                            <InputItem
+                                {...getFieldProps('username', {
+                                    rules: [
+                                        { required: true, message: intl.formatMessage({ id: 'intl.username.errmsg' }) },
+                                        { validator: this.validateAccount },
+                                    ],
+                                }) }
+                                clear
+                                autoFocus
+                                error={!!getFieldError('username')}
+                                onErrorClick={() => {
+                                    alert(getFieldError('username').join('、'))
+                                }}
+                                placeholder={intl.formatMessage({ id: 'intl.username.placeholder' })}>
+                                <FormattedMessage id="intl.username" />
+                            </InputItem>
+                            <InputItem
+                                {...getFieldProps('password', {
+                                    rules: [
+                                        { required: true, message: intl.formatMessage({ id: 'intl.password.errmsg' }) },
+                                        { validator: this.validatePassword },
+                                    ],
+                                }) }
+                                clear
+                                error={!!getFieldError('password')}
+                                onErrorClick={() => {
+                                    alert(getFieldError('password').join('、'))
+                                }}
+                                placeholder={intl.formatMessage({ id: 'intl.password.placeholder' })}
+                                type="password">
+                                <FormattedMessage id="intl.password" />
+                            </InputItem>
+                            <ListItem>
+                                <Button
+                                    type="primary"
+                                    disabled={loginStatus === ActionStatus.ING}
+                                    loading={loginStatus === ActionStatus.ING}
+                                    onClick={this.handleSubmit}>
+                                    <FormattedMessage id="intl.btnlogin" />
+                                </Button>
+                            </ListItem>
+                        </List>
+                    </form>
+                </div>
+                <div className="login-copyright">
+                    (C)Sing.Fish
+                </div>
+                <div className="login-chooselan">
+                    <FormattedMessage id="intl.chooselang" />
+                    <ul>
+                        <li><a href="javascript:" onClick={this.handleSetLanguage('jp')}>JP</a></li>
+                        <li><a href="javascript:" onClick={this.handleSetLanguage('zh-CN')}>CN</a></li>
+                        <li><a href="javascript:" onClick={this.handleSetLanguage('en-US')}>EN</a></li>
+                    </ul>
+                </div>
+            </div >
+        )
+    }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return {
-    loginStatus: state.user.get('loginStatus'),
-    user: state.user.get('user'),
-  }
+    return {
+        loginStatus: state.user.get('loginStatus'),
+        user: state.user.get('user'),
+    }
 }
 
 const mapDispatchToProps = {
-  login
+    login
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(createForm()(Login))
+export default connect(mapStateToProps, mapDispatchToProps)(createForm()(injectIntl(Login)))

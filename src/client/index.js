@@ -3,24 +3,34 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Immutable from 'immutable'
+// https://github.com/yahoo/react-intl#example
+// https://github.com/ant-design/intl-example/blob/master/docs/understanding-antd-i18n.md
+// http://www.cnblogs.com/qiaojie/p/6411199.html
 import { match } from 'react-router'
+import { IntlProvider, addLocaleData } from 'react-intl'
+import { LocaleProvider } from 'antd'
+import en from 'react-intl/locale-data/en'
+import zh from 'react-intl/locale-data/zh'
 
+import { ACTION_INIT } from '../common/redux/modules/user'
 import Isomorph from '../common/helpers/Isomorph'
 import routes from '../common/redux/routes'
-import { ACTION_INIT } from '../common/redux/modules/user'
+import messages, { locale } from '../locales'
 import './style.less'
+
+addLocaleData([...en, ...zh])
 
 const finalState = {}
 const {
   routing,
-  ...reducers
+    ...reducers
 } = window.__INITIAL_STATE__ || {}
 
 if (reducers) {
-  for (let p in reducers) {
-    let reducer = reducers[p]
-    finalState[p] = Immutable.fromJS(reducer)
-  }
+    for (let p in reducers) {
+        let reducer = reducers[p]
+        finalState[p] = Immutable.fromJS(reducer)
+    }
 }
 
 const rootElement = document.getElementById('container')
@@ -33,12 +43,18 @@ const history = Isomorph.createHistory(store, pathname)
 store.dispatch({ type: ACTION_INIT })
 
 match({ routes, location }, (error, redirectLocation, renderProps) => {
-  ReactDOM.render(
-    <Isomorph store={store} history={history} />,
-    rootElement
-  )
+    ReactDOM.render(
+        (
+            <LocaleProvider locale={locale}>
+                <IntlProvider locale={locale} messages={messages}>
+                    <Isomorph store={store} history={history} />
+                </IntlProvider>
+            </LocaleProvider>
+        ),
+        rootElement
+    )
 })
 
 if (module.hot) {
-  module.hot.accept()
+    module.hot.accept()
 }

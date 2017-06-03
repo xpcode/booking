@@ -43,8 +43,8 @@ export default function (router) {
 
     await createConnection(env.mysql)
       .then(conn => {
-        const where = `WHERE ${minTime}<mealtime AND mealtime<${maxTime} AND seat.restaurantId=${restaurantId}`
-        const sql = `SELECT DISTINCT seat.id, mealtime, restaurantId, seatcount, status, userId, comments FROM seat LEFT JOIN \`user\` ON seat.userId=user.id ${where}`
+        const where = `WHERE ${minTime}<mealtime AND mealtime<${maxTime} AND restaurantId=${restaurantId}`
+        const sql = `SELECT DISTINCT id, mealtime, status FROM seat ${where}`
 
         logger.debug(sql)
 
