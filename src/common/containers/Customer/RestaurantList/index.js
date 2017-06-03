@@ -41,7 +41,7 @@ class RestaurantList extends Component {
           }
         </List>
         <div className="footer">
-          <Button type="primary" onClick={this.handleSubmit}>{intl.formatMessage(messages.myBooking)}我的预定</Button>
+          <Button type="primary" onClick={this.handleSubmit}>我的预定</Button>
         </div>
       </div >
     )
