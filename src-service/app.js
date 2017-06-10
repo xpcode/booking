@@ -5,10 +5,12 @@ import bodyParser from 'koa-bodyparser'
 
 import router from './controllers'
 import winston from './middlewares/winston'
+import mysql from './middlewares/mysql'
 import env from './env'
 
 new Koa()
   .use(winston())
+  .use(mysql())
   .use(logger())
   .use(bodyParser())
   .use(router.routes())

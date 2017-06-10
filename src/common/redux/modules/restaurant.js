@@ -23,9 +23,13 @@ export default ($$state = $$initialState, action) => {
                 if (item.status == 1) {
                     schedule[key] = 'calendar-grid-item-11'
 
-                } else if (!schedule[item.id]) {
+                } else if (item.status == 2) {
                     schedule[key] = 'calendar-grid-item-12'
+
+                } else if (item.status == 3) {
+                    schedule[key] = 'calendar-grid-item-13'
                 }
+
                 if (item.orderStatus == 1) {
                     schedule[key] = 'calendar-grid-item-12'
 
@@ -36,33 +40,23 @@ export default ($$state = $$initialState, action) => {
             return $$state.set('schedule', schedule)
 
         case ACTION_GET_TODOLIST_SUCCEED:
-            // 状态  1:待预定 2:已预定=待确认 3:已确定 4:已取消
-            return $$state.set('todoList', action.payload.map(item => {
-                // 状态  1:待预定 2:已确定 3:已取消
-                if (item.seatStatus == 1) {
-                    // 状态  1:待确认 2:已确认 3:席位已取消
-                    if (item.orderStatus == 1) {
-                        item.status = 2
-                    } else if (item.orderStatus == 2) {
-                        item.status = 3
-                    } else if (item.orderStatus == 3) {
-                        item.status = 4
-                    }
-                } else if (item.seatStatus == 2) {
-                    if (item.orderStatus == 1) {
-                        item.status = 2
-                    } else if (item.orderStatus == 2) {
-                        item.status = 3
-                    }
-                }
-                return item
-            }))
+            return $$state.set('todoList', action.payload)
 
-        case ACTION_UPDATE_SEATSTATUS_SUCCEED:
+        case ACTION_UPDATE_SEATSTATUS_CANCEL_SUCCEED:
             return $$state.update('todoList', todoList => {
                 return todoList.map(item => {
-                    if (item.id === action.payload.seatId) {
-                        item.status = action.payload.status
+                    if (item.id === action.payload) {
+                        item.seatStatus = 4
+                    }
+                    return item
+                })
+            })
+
+        case ACTION_UPDATE_ORDERSTATUS_CONFIRM_SUCCEED:
+            return $$state.update('todoList', todoList => {
+                return todoList.map(item => {
+                    if (item.orderId === action.payload) {
+                        item.seatStatus = 3
                     }
                     return item
                 })
@@ -161,51 +155,46 @@ export const getTodoList = (date) => {
     }
 }
 
-export const ACTION_UPDATE_SEATSTATUS = 'ACTION_UPDATE_SEATSTATUS'
-export const ACTION_UPDATE_SEATSTATUS_SUCCEED = 'ACTION_UPDATE_SEATSTATUS_SUCCEED'
-export const ACTION_UPDATE_SEATSTATUS_FAILURE = 'ACTION_UPDATE_SEATSTATUS_FAILURE'
+export const ACTION_UPDATE_SEATSTATUS_CANCEL = 'ACTION_UPDATE_SEATSTATUS_CANCEL'
+export const ACTION_UPDATE_SEATSTATUS_CANCEL_SUCCEED = 'ACTION_UPDATE_SEATSTATUS_CANCEL_SUCCEED'
+export const ACTION_UPDATE_SEATSTATUS_CANCEL_FAILURE = 'ACTION_UPDATE_SEATSTATUS_CANCEL_FAILURE'
 
-export const updateStatus = ({ id, orderId, status }) => {
+export const cancelSeat = (seatId) => {
     return (dispatch, getState) => {
-        const url = env.HTTP_UPDATE_SEAT_STATUS
-        const options = genFetchOptions('post', {
-            seatId: id,
-            status
-        })
+        const url = env.HTTP_UPDATE_SEAT_CANCEL
+        const options = genFetchOptions('post', { seatId })
 
         return fetch(url, options)
             .then(toJSON, catchException)
             .then(function (json) {
                 if (json.code === 200) {
-                    updateOrderStatus({ orderId, status: 2 })
-                    dispatch(genAction(ACTION_UPDATE_SEATSTATUS_SUCCEED, {
-                        seatId: id,
-                        status
-                    }))
+                    dispatch(genAction(ACTION_UPDATE_SEATSTATUS_CANCEL_SUCCEED, seatId))
                 } else {
-                    dispatch(genAction(ACTION_UPDATE_SEATSTATUS_FAILURE))
+                    dispatch(genAction(ACTION_UPDATE_SEATSTATUS_CANCEL_FAILURE))
                     Toast.info(json.message || '请求失败', 2)
                 }
             })
     }
 }
 
-export const ACTION_UPDATE_ORDERSTATUS = 'ACTION_UPDATE_ORDERSTATUS'
-export const ACTION_UPDATE_ORDERSTATUS_SUCCEED = 'ACTION_UPDATE_ORDERSTATUS_SUCCEED'
-export const ACTION_UPDATE_ORDERSTATUS_FAILURE = 'ACTION_UPDATE_ORDERSTATUS_FAILURE'
+export const ACTION_UPDATE_ORDERSTATUS_CONFIRM = 'ACTION_UPDATE_ORDERSTATUS_CONFIRM'
+export const ACTION_UPDATE_ORDERSTATUS_CONFIRM_SUCCEED = 'ACTION_UPDATE_ORDERSTATUS_CONFIRM_SUCCEED'
+export const ACTION_UPDATE_ORDERSTATUS_CONFIRM_FAILURE = 'ACTION_UPDATE_ORDERSTATUS_CONFIRM_FAILURE'
 
-export const updateOrderStatus = ({ orderId, status }) => {
-    const url = env.HTTP_UPDATE_ORDER_STATUS
-    const options = genFetchOptions('post', {
-        orderId,
-        status
-    })
+export const confirmOrder = (orderId, seatId) => {
+    return (dispatch, getState) => {
+        const url = env.HTTP_UPDATE_ORDER_CONFIRM
+        const options = genFetchOptions('post', { orderId, seatId })
 
-    return fetch(url, options)
-        .then(toJSON, catchException)
-        .then(function (json) {
-            if (json.code !== 200) {
-                Toast.info('更新订单状态失败', 2)
-            }
-        })
+        return fetch(url, options)
+            .then(toJSON, catchException)
+            .then(function (json) {
+                if (json.code === 200) {
+                    dispatch(genAction(ACTION_UPDATE_ORDERSTATUS_CONFIRM_SUCCEED, orderId))
+                } else {
+                    dispatch(genAction(ACTION_UPDATE_ORDERSTATUS_CONFIRM_FAILURE))
+                    Toast.info('更新订单状态失败', 2)
+                }
+            })
+    }
 }

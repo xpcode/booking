@@ -6,7 +6,7 @@ import { WingBlank, Accordion, List, Button } from 'antd-mobile'
 import { createForm } from 'rc-form'
 import moment from 'moment'
 
-import { getTodoList, updateStatus } from '../../../redux/modules/restaurant'
+import { getTodoList, cancelSeat, confirmOrder } from '../../../redux/modules/restaurant'
 import './TodoList.less'
 
 const ListItem = List.Item
@@ -23,24 +23,27 @@ class Login extends Component {
 
     handleConfirmSeat = (item) => {
         return e => {
-            this.props.updateStatus(item, 2)
+            this.props.confirmOrder(item.orderId, item.id)
         }
     }
 
     handleCancelSeat = (item) => {
         return e => {
-            this.props.updateStatus(item, 3)
+            this.props.cancelSeat(item.id)
         }
     }
 
     renderTodoList() {
         return this.props.todoList.map(item => {
-            const title = {
+            let title = {
                 1: '待预定',
                 2: '待确认',
-                3: '已确定',
                 4: '已取消',
-            }[item.status] || item.contactname
+            }[item.seatStatus] || item.contactname
+            if (item.seatStatus == 3 && item.orderStatus != 2) {
+                title = '预订失败'
+                item.seatStatus = 4
+            }
             const header = (
                 <div className="span4">
                     <span className="span1">{moment(item.mealtime, 'YYYYMMDDhhmmss').format('hh:mm')}</span>
@@ -48,31 +51,32 @@ class Login extends Component {
                     <span className="span3">{item.seatcount}</span>
                 </div>
             )
+            const pnlClass = `status-${item.seatStatus}`
             return (
-                <Accordion.Panel header={header} key={item.orderId}>
+                <Accordion.Panel className={pnlClass} header={header} key={item.orderId}>
                     <List className="my-list">
                         {
-                            (item.status === 3) && (
-                                <div>
-                                    <List.Item>姓名：{item.contactname}</List.Item>
-                                    <List.Item>人数：{item.seatcount}</List.Item>
-                                    <List.Item>联系方式：{item.contactmobile}</List.Item>
-                                    <List.Item>备注：{item.comments}</List.Item>
-                                </div>
-                            )
-                        }
-                        {
-                            item.status === 1 && (
+                            (item.seatStatus === 3 && item.orderStatus == 2) && (
                                 <List.Item>
-                                    <Button type="primary" onClick={this.handleCancelSeat(item)} inline>取消席位</Button>
+                                    <div className="content">姓名：{item.contactname}</div>
+                                    <div className="content">人数：{item.seatcount}</div>
+                                    <div className="content">联系方式：{item.contactmobile}</div>
+                                    <div className="content">备注：{item.comments}</div>
                                 </List.Item>
                             )
                         }
                         {
-                            item.status === 2 && (
+                            item.seatStatus === 1 && (
                                 <List.Item>
-                                    <Button type="primary" onClick={this.handleCancelSeat(item)} inline>取消席位</Button>
-                                    <Button type="primary" onClick={this.handleConfirmSeat(item)} inline>确认预订</Button>
+                                    <Button type="primary" className="btn-cancel-large" onClick={this.handleCancelSeat(item)} inline>取消席位</Button>
+                                </List.Item>
+                            )
+                        }
+                        {
+                            item.seatStatus === 2 && (
+                                <List.Item>
+                                    <Button type="primary" className="btn-cancel" onClick={this.handleCancelSeat(item)} inline>取消席位</Button>
+                                    <Button type="primary" className="btn-confirm" onClick={this.handleConfirmSeat(item)} inline>确认预订</Button>
                                 </List.Item>
                             )
                         }
@@ -106,7 +110,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = {
     getTodoList,
-    updateStatus
+    cancelSeat,
+    confirmOrder,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(createForm()(Login))

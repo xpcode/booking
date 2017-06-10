@@ -6,8 +6,8 @@ export default {
 
   HTTP_LOGIN: '/api/login',
   HTTP_ADD_SEAT: gen('restaurants/restaurant/seats/add'),
-  HTTP_UPDATE_SEAT_STATUS: gen('restaurant/seat/updatestatus'),
-  HTTP_UPDATE_ORDER_STATUS: gen('restaurant/order/updatestatus'),
+  HTTP_UPDATE_SEAT_CANCEL: gen('restaurant/seat/cancel'),
+  HTTP_UPDATE_ORDER_CONFIRM: gen('restaurant/order/confirm'),
   HTTP_GET_SCHEDULE: gen('restaurants/restaurant/schedule'),
   HTTP_GET_TODOLIST: gen('restaurants/restaurant/todolist'),
   HTTP_GET_RESTAURANTLIST: gen('customer/restaurants'),

@@ -1,16 +1,16 @@
 import path from 'path'
 
 export default {
-  HTTP_SERVER_PORT: 8080,
+    HTTP_SERVER_PORT: 8080,
 
-  LOG_DIR: path.join(__dirname, './logs'),
-  LOG_LEVEL: 'debug',
+    LOG_DIR: path.join(__dirname, './logs'),
+    LOG_LEVEL: 'debug',
 
-  mysql: {
-    host: 'localhost',
-    user: 'root',
-    password: '666666',
-    database: 'booking',
-    port: 3306,
-  }
+    mysql: {
+        host: 'localhost',
+        user: 'root',
+        password: '666666',
+        database: 'booking',
+        port: 3306,
+    }
 }
