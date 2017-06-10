@@ -1,76 +1,40 @@
 import env from '../env'
-import { createConnection } from 'promise-mysql'
 
 export default function (router) {
 
-  /**
-   * 登录
-   * body: {"username":"earl","password":"f379eaf3c831b04de153469d1bec345e", "type": 1}
-   */
-  router.post('/user/login', async function (ctx) {
-    const { request, logger } = ctx
-    const { username, password } = request.body
+    /**
+     * 登录
+     * body: {"username":"earl","password":"f379eaf3c831b04de153469d1bec345e", "type": 1}
+     */
+    router.post('/user/login', async function (ctx) {
+        const { request, logger, mysql } = ctx
+        const { username, password } = request.body
 
-    await createConnection(env.mysql)
-      .then(conn => {
-        const where = `where username="${username}" and password="${password}"`
-        const sql = `select id, username, realname, restaurantIds, type from user ${where}`
+        const where = `WHERE username="${username}" AND password="${password}"`
+        const sql = `SELECT id, username, realname, restaurantIds, type FROM \`user\` ${where}`
 
         logger.debug(sql)
 
-        return conn.query(sql)
+        const rows = await mysql.query(sql).catch(e => null)
 
-      }).then(rows => {
-        if (rows.length > 0) {
-          ctx.body = {
-            code: 200,
-            data: rows[0]
-          }
+        if (rows) {
+            if (rows.length > 0) {
+                ctx.body = {
+                    code: 200,
+                    data: rows[0]
+                }
+            } else {
+                ctx.body = {
+                    code: 201
+                }
+            }
         } else {
-          ctx.body = {
-            code: 201
-          }
+            ctx.body = {
+                code: 500
+            }
         }
+    })
 
-      }).catch(error => {
-        ctx.body = {
-          code: 500
-        }
-      })
-  })
-
-  router.post('/user/order', async function (ctx) {
-    const { request, logger } = ctx
-    const { seatId, status, contactname, contactmobile, contactinfo, createtime } = request.body
-
-    await createConnection(env.mysql)
-      .then(conn => {
-        const where = `where username="${username}" and password="${password}" and type="${type}"`
-        const sql = `select id, username, realname, restaurantIds from user ${where}`
-
-        logger.debug(sql)
-
-        return conn.query(sql)
-
-      }).then(rows => {
-        if (rows.length > 0) {
-          ctx.body = {
-            code: 200,
-            data: rows[0]
-          }
-        } else {
-          ctx.body = {
-            code: 201
-          }
-        }
-
-      }).catch(error => {
-        ctx.body = {
-          code: 500
-        }
-      })
-  })
-
-  return router
+    return router
 
 }

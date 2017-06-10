@@ -76,6 +76,9 @@ export const login = ({ username, password }) => {
                 location.href = '/customer/restaurants'
             }
 
+        } else if (json.code === 201) {
+            Toast.info('用户名或密码输入不正确', 2)
+
         } else {
             dispatch(genAction(ACTION_LOGIN_FAILURE))
             Toast.info(json.message || '登录失败', 2)
