@@ -31,7 +31,7 @@ class Login extends Component {
         if (value && value.length >= 4) {
             callback()
         } else {
-            callback(new Error('帐号至少4个字符'))
+            callback()
         }
     }
 
@@ -39,7 +39,7 @@ class Login extends Component {
         if (value && value.length > 4) {
             callback()
         } else {
-            callback(new Error('密码至少6个字符'))
+            callback()
         }
     }
 
@@ -75,7 +75,7 @@ class Login extends Component {
                 </div>
                 <div className="login-form">
                     <form>
-                        <List renderFooter={() => getFieldError('username') && getFieldError('username').join(',')}>
+                        <List>
                             <InputItem
                                 {...getFieldProps('username', {
                                     rules: [
@@ -85,6 +85,7 @@ class Login extends Component {
                                 }) }
                                 clear
                                 autoFocus
+                                maxLength={20}
                                 error={!!getFieldError('username')}
                                 onErrorClick={() => {
                                     alert(getFieldError('username').join('、'))
@@ -100,6 +101,7 @@ class Login extends Component {
                                     ],
                                 }) }
                                 clear
+                                maxLength={20}
                                 error={!!getFieldError('password')}
                                 onErrorClick={() => {
                                     alert(getFieldError('password').join('、'))
@@ -124,8 +126,8 @@ class Login extends Component {
                     (C)Sing.Fish
                 </div>
                 <div className="login-chooselan">
-                    <FormattedMessage id="intl.chooselang" />
-                    <ul>
+                    <ul className="choose-lang">
+                        <li><FormattedMessage id="intl.chooselang" /></li>
                         <li><a href="javascript:" onClick={this.handleSetLanguage('jp')}>JP</a></li>
                         <li><a href="javascript:" onClick={this.handleSetLanguage('zh-CN')}>CN</a></li>
                         <li><a href="javascript:" onClick={this.handleSetLanguage('en-US')}>EN</a></li>
