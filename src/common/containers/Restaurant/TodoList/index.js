@@ -53,7 +53,7 @@ class Login extends Component {
             )
             const pnlClass = `status-${item.seatStatus}`
             return (
-                <Accordion.Panel className={pnlClass} header={header} key={item.orderId}>
+                <Accordion.Panel className={pnlClass} header={header} key={item.id + '|' + item.orderId}>
                     <List className="my-list">
                         {
                             (item.seatStatus === 3 && item.orderStatus == 2) && (
@@ -91,7 +91,7 @@ class Login extends Component {
 
         return (
             <WingBlank size="sm">
-                <Accordion accordion openAnimation={{}} className="my-accordion" onChange={this.onChange}>
+                <Accordion className="my-accordion" onChange={this.onChange}>
                     {this.renderTodoList()}
                 </Accordion>
                 <div className="btn-fixed-wrapper">

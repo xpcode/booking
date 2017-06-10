@@ -74,7 +74,7 @@ export const genAction = (type, payload) => {
 export const doNothing = () => { }
 
 export const genLeast3MonthTimeRange = () => {
-  const format = 'YYYYMMDDhhmmss'
+  const format = 'YYYYMMDDHHmmss'
   const minTime = moment()
     .set('date', 1)
     .set('hour', 0)

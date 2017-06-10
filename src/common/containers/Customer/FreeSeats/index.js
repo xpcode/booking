@@ -12,66 +12,74 @@ import ActionStatus from '../../../constants/ActionStatus'
 const ListItem = List.Item
 
 class RestaurantList extends Component {
-  constructor(props) {
-    super(props)
+    constructor(props) {
+        super(props)
 
-    const { restaurantId } = props.params
-    const currentDate = moment()
+        const { restaurantId } = props.params
+        const currentDate = moment()
 
-    this.state = {
-      restaurantId,
-      initDate0: currentDate,
-      initDate1: moment().set('month', currentDate.month() + 1),
-      initDate2: moment().set('month', currentDate.month() + 2)
+        this.state = {
+            restaurantId,
+            initDate0: currentDate,
+            initDate1: moment().set('month', currentDate.month() + 1),
+            initDate2: moment().set('month', currentDate.month() + 2)
+        }
     }
-  }
 
-  componentDidMount() {
-    this.props.getFreeSeats(this.state.restaurantId)
-  }
+    componentDidMount() {
+        this.props.getFreeSeats(this.state.restaurantId)
+    }
 
-  handleClickDate = (date) => {
-    const restaurantId = this.state.restaurantId
-    const mealtime = date.format('YYYYMMDD')
-    this.props.history.push(`/customer/restaurants/${restaurantId}/${mealtime}`)
-  }
+    handleClickDate = (date) => {
+        const { freeSeats } = this.props
+        const restaurantId = this.state.restaurantId
+        const mealtime = date.format('YYYYMMDD')
 
-  render() {
-    const { freeSeats } = this.props
-    const { initDate0, initDate1, initDate2 } = this.state
+        if (freeSeats[mealtime]) {
+            this.props.history.push(`/customer/restaurants/${restaurantId}/${mealtime}`)
+        }
+    }
 
-    return (
-      <div className="restaurantlist">
-        <div className="calendars">
-          <div className="calendar-wrapper">
-            <h2>{initDate0.year()}年{initDate0.month() + 1}月 本月</h2>
-            <Calendar date={initDate0} dataSource={freeSeats} onClickDay={this.handleClickDate} />
-          </div>
-          <div className="calendar-wrapper">
-            <h2>{initDate0.year()}年{initDate1.month() + 1}月</h2>
-            <Calendar date={initDate1} dataSource={freeSeats} onClickDay={this.handleClickDate} />
-          </div>
-          <div className="calendar-wrapper">
-            <h2>{initDate0.year()}年{initDate2.month() + 1}月</h2>
-            <Calendar date={initDate2} dataSource={freeSeats} onClickDay={this.handleClickDate} />
-          </div>
-        </div>
-        <div className="btn-fixed-wrapper">
-          <Button type="primary" onClick={() => this.props.history.go(-1)}>返回</Button>
-      </div>
-      </div >
-    )
-  }
+    handleCallback() {
+        this.props.history.push('/customer/restaurants')
+    }
+
+    render() {
+        const { freeSeats } = this.props
+        const { initDate0, initDate1, initDate2 } = this.state
+
+        return (
+            <div className="restaurantlist">
+                <div className="calendars">
+                    <div className="calendar-wrapper">
+                        <h2>{initDate0.year()}年{initDate0.month() + 1}月 本月</h2>
+                        <Calendar date={initDate0} dataSource={freeSeats} onClickDay={this.handleClickDate} />
+                    </div>
+                    <div className="calendar-wrapper">
+                        <h2>{initDate0.year()}年{initDate1.month() + 1}月</h2>
+                        <Calendar date={initDate1} dataSource={freeSeats} onClickDay={this.handleClickDate} />
+                    </div>
+                    <div className="calendar-wrapper">
+                        <h2>{initDate0.year()}年{initDate2.month() + 1}月</h2>
+                        <Calendar date={initDate2} dataSource={freeSeats} onClickDay={this.handleClickDate} />
+                    </div>
+                </div>
+                <div className="btn-fixed-wrapper">
+                    <Button type="primary" onClick={this.handleCallback.bind(this)}>返回</Button>
+                </div>
+            </div >
+        )
+    }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return {
-    freeSeats: state.customer.get('freeSeats')
-  }
+    return {
+        freeSeats: state.customer.get('freeSeats')
+    }
 }
 
 const mapDispatchToProps = {
-  getFreeSeats
+    getFreeSeats
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(RestaurantList)

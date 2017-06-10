@@ -11,51 +11,51 @@ import './RestaurantList.less'
 const ListItem = List.Item
 
 class RestaurantList extends Component {
-  constructor(props) {
-    super(props)
-  }
+    constructor(props) {
+        super(props)
+    }
 
-  componentDidMount() {
-    this.props.getRestaurantList()
-  }
+    componentDidMount() {
+        this.props.getRestaurantList()
+    }
 
-  handleSubmit() {
+    handleSubmit() {
+        this.props.history.push('/customer/myorders')
+    }
 
-  }
-
-  render() {
-    return (
-      <div className="restaurantlist">
-        <h1>
-          Sing.Fish
-        </h1>
-        <List renderHeader={() => '最新开放席位'}>
-          {
-            this.props.restaurantList.map(item => {
-              return (
-                <ListItem key={item.id}>
-                  <a href={'/customer/restaurants/' + item.id}>{item.name}</a>
-                </ListItem>
-              )
-            })
-          }
-        </List>
-        <div className="footer">
-          <Button type="primary" onClick={this.handleSubmit}>我的预定</Button>
-        </div>
-      </div >
-    )
-  }
+    render() {
+        return (
+            <div className="restaurantlist">
+                <h1>
+                    Sing.Fish
+                </h1>
+                <List renderHeader={() => '最新开放席位'}>
+                    {
+                        this.props.restaurantList.map(item => {
+                            return (
+                                <ListItem key={item.id}>
+                                    <a href={'/customer/restaurants/' + item.id}>{item.name}</a>
+                                </ListItem>
+                            )
+                        })
+                    }
+                </List>
+                <div className="footer">
+                    <Button type="primary" onClick={this.handleSubmit.bind(this)}>我的预定</Button>
+                </div>
+            </div >
+        )
+    }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return {
-    restaurantList: state.customer.get('restaurantList')
-  }
+    return {
+        restaurantList: state.customer.get('restaurantList')
+    }
 }
 
 const mapDispatchToProps = {
-  getRestaurantList
+    getRestaurantList
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(RestaurantList)

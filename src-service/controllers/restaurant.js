@@ -168,7 +168,7 @@ LEFT JOIN \`user\` ON seat.userId=user.id ${where}`
                 seatcount,
                 contactmobile
             } = orders[0]
-            const dtstr = moment(mealtime).format('YYYY年MM月DD日')
+            const dtstr = moment(item.mealtime, 'YYYYMMDDhhmmss').format('YYYY年MM月DD日')
 
             // 发送短信
             const smsMessage = '您的预订已被餐厅确认，${restaurantName}，${dtstr}，${seatcount}人，查看详情：http://sing.fish/user/001/reservation 【sing.fish】'
