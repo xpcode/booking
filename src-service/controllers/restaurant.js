@@ -94,16 +94,18 @@ LEFT JOIN \`user\` ON seat.userId=user.id ${where}`
         const { request, logger, mysql } = ctx
         const { seatId } = request.body
 
-        let sql = `SELECT * FROM \`order\` WHERE seatId=${seatId} AND \`status\`=3`
+        let sql = `SELECT o.status, r.name restaurantName, s.mealtime, s.seatcount, o.contactmobile FROM \`order\` o INNER JOIN seat s ON o.seatId=s.id INNER JOIN restaurant r ON s.restaurantId=r.id WHERE seatId=${seatId}`
         logger.debug(sql)
 
-        const rows = await mysql.query(sql).catch(e => null)
+        const rows = await mysql.query(sql).catch(e => null) || []
 
-        if (rows && rows.length !== 0) {
-            ctx.body = {
-                code: 201
+        for (const item of rows) {
+            if (item.status === 2) {
+                ctx.body = {
+                    code: 201
+                }
+                return
             }
-            return
         }
 
         sql = `DELETE FROM seat WHERE id=${seatId}`
@@ -112,6 +114,25 @@ LEFT JOIN \`user\` ON seat.userId=user.id ${where}`
         const { affectedRows } = await mysql.query(sql).catch(e => ({ affectedRows: 0 }))
 
         if (affectedRows > 0) {
+            for (const item of rows) {
+                if (item.status === 1) {
+                    const {
+                        restaurantName,
+                        mealtime,
+                        seatcount,
+                        contactmobile
+                        } = item
+                    const dtstr = moment(item.mealtime, 'YYYYMMDDhhmmss').format('YYYY年MM月DD日')
+
+                    // 发送短信
+                    const smsMessage = `很抱歉，您的预订被餐厅取消，${restaurantName}，${dtstr}，${seatcount}人，查看详情：http://sing.fish/customer/myorders 【sing.fish】`
+                    logger.debug(contactmobile, smsMessage)
+
+                    const { errorCode, message, messageId, exceptionType, exceptionMessage } = await sendSms(contactmobile, smsMessage)
+                    logger.debug(errorCode, message, messageId, exceptionType, exceptionMessage)
+                }
+            }
+
             ctx.body = {
                 code: 200
             }
@@ -156,7 +177,7 @@ LEFT JOIN \`user\` ON seat.userId=user.id ${where}`
         }
 
 
-        // 获取订单信息，发短信用
+        // 获取订单信息，给用户发短信用
         sql = `SELECT r.name restaurantName, s.mealtime, s.seatcount FROM \`order\` o INNER JOIN seat s ON o.seatId=s.id INNER JOIN restaurant r ON s.restaurantId=r.id WHERE o.id=${orderId}`
         logger.debug(sql)
 
@@ -172,8 +193,10 @@ LEFT JOIN \`user\` ON seat.userId=user.id ${where}`
 
             // 发送短信
             const smsMessage = '您的预订已被餐厅确认，${restaurantName}，${dtstr}，${seatcount}人，查看详情：http://sing.fish/user/001/reservation 【sing.fish】'
-            logger.debug(smsMessage)
+            logger.debug(contactmobile, smsMessage)
+
             const { errorCode, message, messageId, exceptionType, exceptionMessage } = await sendSms(contactmobile, smsMessage)
+            logger.debug(errorCode, message, messageId, exceptionType, exceptionMessage)
         }
 
 

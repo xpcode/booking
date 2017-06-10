@@ -143,7 +143,6 @@ FROM \`order\` o INNER JOIN seat ON o.seatId=seat.id INNER JOIN restaurant ON re
 
             // 发送短信
             const smsMessage = `有新预订，${dtstr}，${seatcount}人，查看详情：http://sing.fish/restaurant/schedule/${datestr}  【sing.fish】`
-            logger.debug(smsMessage)
             logger.debug(mobilePhone, smsMessage)
 
             const { errorCode, message, messageId, exceptionType, exceptionMessage } = await sendSms(mobilePhone, smsMessage)
