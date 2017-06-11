@@ -28,9 +28,6 @@ export default ($$state = $$initialState, action) => {
         case ACTION_LOGIN:
             return $$state.set('loginStatus', ActionStatus.ING)
 
-        case ACTION_LOGIN:
-            return $$state.set('loginStatus', ActionStatus.ING)
-
         case ACTION_LOGIN_SUCCEED:
             return $$state
                 .set('loginStatus', ActionStatus.SUCCEED)
@@ -57,6 +54,7 @@ export const login = ({ username, password }) => {
             password: md5(password)
         })
 
+        dispatch(genAction(ACTION_LOGIN))
         const json = await fetch(url, options).then(toJSON, catchException)
 
         if (json.code === 200) {
@@ -77,11 +75,12 @@ export const login = ({ username, password }) => {
             }
 
         } else if (json.code === 201) {
+            dispatch(genAction(ACTION_LOGIN_FAILURE))
             Toast.info('用户名或密码输入不正确', 2)
 
         } else {
             dispatch(genAction(ACTION_LOGIN_FAILURE))
-            Toast.info(json.message || '登录失败', 2)
+            Toast.info('登录失败', 2)
         }
     }
 }

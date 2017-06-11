@@ -110,7 +110,11 @@ class Login extends Component {
                                     disabled={loginStatus === ActionStatus.ING}
                                     loading={loginStatus === ActionStatus.ING}
                                     onClick={this.handleSubmit}>
-                                    <FormattedMessage id="intl.btnlogin" />
+                                    {
+                                        loginStatus === ActionStatus.ING ?
+                                            <FormattedMessage id="intl.btnlogin.ing" /> :
+                                            <FormattedMessage id="intl.btnlogin" />
+                                    }
                                 </Button>
                             </ListItem>
                         </List>

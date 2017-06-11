@@ -6,5 +6,6 @@ export default {
     'intl.password.placeholder': '请输入密码',
     'intl.password.errmsg': '请输入密码',
     'intl.btnlogin': '登录',
+    'intl.btnlogin.ing': '登录中..',
     'intl.chooselang': '选择语言',
 }
