@@ -7,6 +7,7 @@ import { createForm } from 'rc-form'
 import moment from 'moment'
 
 import { getTimeList, addOrder } from '../../../redux/modules/customer'
+import ActionStatus from '../../../constants/ActionStatus'
 import './Order.less'
 
 const ListItem = List.Item
@@ -202,7 +203,7 @@ class Order extends Component {
                             loading={addOrderStatus === ActionStatus.ING}
                             onClick={this.onSubmit} inline>
                             {
-                                loginStatus === ActionStatus.ING ?
+                                addOrderStatus === ActionStatus.ING ?
                                     '预定中..' :
                                     '预定'
                             }
