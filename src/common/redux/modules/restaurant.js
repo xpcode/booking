@@ -8,6 +8,9 @@ import ActionStatus from '../../constants/ActionStatus'
 import { toJSON, auth, catchException, genAction, genFetchOptions, genLeast3MonthTimeRange } from '../../helpers/util'
 
 const $$initialState = Immutable.fromJS({
+    addSeatStatus: ActionStatus.READY,
+    cancelSeatStatus: ActionStatus.READY,
+    confirmOrderStatus: ActionStatus.READY,
     schedule: {},
     todoList: []
 })
@@ -39,31 +42,56 @@ export default ($$state = $$initialState, action) => {
             })
             return $$state.set('schedule', schedule)
 
+        case ACTION_ADD_SEAT:
+            return $$state.set('addSeatStatus', ActionStatus.ING)
+
+        case ACTION_ADD_SEAT_SUCCEED:
+            return $$state.set('addSeatStatus', ActionStatus.SUCCEED)
+
+        case ACTION_ADD_SEAT_FAILURE:
+            return $$state.set('addSeatStatus', ActionStatus.FAILURE)
+
         case ACTION_GET_TODOLIST_SUCCEED:
             return $$state.set('todoList', action.payload)
 
+        case ACTION_UPDATE_SEATSTATUS_CANCEL:
+            return $$state.set('cancelSeatStatus', ActionStatus.ING)
+
         case ACTION_UPDATE_SEATSTATUS_CANCEL_SUCCEED:
-            return $$state.update('todoList', todoList => {
-                return todoList.map(item => {
-                    if (item.id === action.payload) {
-                        item.seatStatus = 4
-                    }
-                    return item
+            return $$state
+                .set('cancelSeatStatus', ActionStatus.SUCCEED)
+                .update('todoList', todoList => {
+                    return todoList.map(item => {
+                        if (item.id === action.payload) {
+                            item.seatStatus = 4
+                        }
+                        return item
+                    })
                 })
-            })
+
+        case ACTION_UPDATE_SEATSTATUS_CANCEL_FAILURE:
+            return $$state.set('cancelSeatStatus', ActionStatus.FAILURE)
+
+        case ACTION_UPDATE_ORDERSTATUS_CONFIRM:
+            return $$state.set('confirmOrderStatus', ActionStatus.ING)
 
         case ACTION_UPDATE_ORDERSTATUS_CONFIRM_SUCCEED:
-            return $$state.update('todoList', todoList => {
-                return todoList.map(item => {
-                    if (item.id == action.payload.seatId) {
-                        item.seatStatus = 3
-                    }
-                    if (item.orderId == action.payload.orderId) {
-                        item.orderStatus = 2
-                    }
-                    return item
+            return $$state
+                .set('confirmOrderStatus', ActionStatus.SUCCEED)
+                .update('todoList', todoList => {
+                    return todoList.map(item => {
+                        if (item.id == action.payload.seatId) {
+                            item.seatStatus = 3
+                        }
+                        if (item.orderId == action.payload.orderId) {
+                            item.orderStatus = 2
+                        }
+                        return item
+                    })
                 })
-            })
+
+        case ACTION_UPDATE_ORDERSTATUS_CONFIRM_FAILURE:
+            return $$state.set('confirmOrderStatus', ActionStatus.FAILURE)
 
         default:
             return $$state
@@ -83,6 +111,8 @@ export const addSeat = (seatInfo) => {
             seatcount: seatInfo.count,
             comments: seatInfo.comments
         })
+
+        dispatch(genAction(ACTION_ADD_SEAT))
 
         return fetch(url, options)
             .then(toJSON, catchException)
@@ -167,6 +197,8 @@ export const cancelSeat = (seatId) => {
         const url = env.HTTP_UPDATE_SEAT_CANCEL
         const options = genFetchOptions('post', { seatId })
 
+        dispatch(genAction(ACTION_UPDATE_SEATSTATUS_CANCEL))
+
         return fetch(url, options)
             .then(toJSON, catchException)
             .then(function (json) {
@@ -188,6 +220,8 @@ export const confirmOrder = (orderId, seatId, userId) => {
     return (dispatch, getState) => {
         const url = env.HTTP_UPDATE_ORDER_CONFIRM
         const options = genFetchOptions('post', { orderId, seatId, userId })
+
+        dispatch(genAction(ACTION_UPDATE_ORDERSTATUS_CONFIRM))
 
         return fetch(url, options)
             .then(toJSON, catchException)

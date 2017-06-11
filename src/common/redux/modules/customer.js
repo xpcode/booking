@@ -8,6 +8,7 @@ import ActionStatus from '../../constants/ActionStatus'
 import { toJSON, auth, catchException, genAction, genFetchOptions, genLeast3MonthTimeRange } from '../../helpers/util'
 
 const $$initialState = Immutable.fromJS({
+    addOrderStatus: ActionStatus.READY,
     restaurantList: [],
     freeSeats: {},
     timeList: [],
@@ -40,6 +41,15 @@ export default ($$state = $$initialState, action) => {
 
         case ACTION_GET_MYORDERLIST_SUCCEED:
             return $$state.set('myorders', action.payload)
+
+        case ACTION_ADD_ORDER:
+            return $$state.set('addOrderStatus', ActionStatus.ING)
+
+        case ACTION_ADD_ORDER_SUCCEED:
+            return $$state.set('addOrderStatus', ActionStatus.SUCCEED)
+
+        case ACTION_ADD_ORDER_FAILURE:
+            return $$state.set('addOrderStatus', ActionStatus.FAILURE)
 
         default:
             return $$state
@@ -172,6 +182,8 @@ export const addOrder = (orderInfo) => {
             })
         })
 
+        dispatch(genAction(ACTION_ADD_ORDER))
+
         fetch(url, options)
             .then(toJSON, catchException)
             .then(function (json) {
@@ -182,7 +194,7 @@ export const addOrder = (orderInfo) => {
                     location.href = '/customer/myorders'
                 } else {
                     dispatch(genAction(ACTION_ADD_ORDER_FAILURE))
-                    Toast.info(json.message || '请求失败', 2)
+                    Toast.info('下单失败', 2)
                 }
             })
     }
