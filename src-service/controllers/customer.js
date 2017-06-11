@@ -57,8 +57,8 @@ export default function (router) {
         const minTime = mealtime + '000000'
         const maxTime = mealtime + '235959'
 
-        const where = `WHERE ${minTime}<mealtime AND mealtime<${maxTime} AND status<3 AND restaurantId=${restaurantId}`
-        const sql = `SELECT DISTINCT id, mealtime, seatcount FROM seat ${where}`
+        const where = `WHERE ${minTime}<s.mealtime AND s.mealtime<${maxTime} AND s.status<3 AND s.restaurantId=${restaurantId}`
+        const sql = `SELECT DISTINCT s.id, s.mealtime, s.seatcount, r.name restaurantName FROM seat s INNER JOIN restaurant r ON s.restaurantId=r.id ${where}`
 
         logger.debug(sql)
 

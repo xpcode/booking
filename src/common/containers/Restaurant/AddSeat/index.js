@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { List, InputItem, Button, TextareaItem, DatePicker } from 'antd-mobile'
 import { createForm } from 'rc-form'
+import { injectIntl, FormattedMessage } from 'react-intl'
 import moment from 'moment'
 
 import { addSeat } from '../../../redux/modules/restaurant'
@@ -31,7 +32,7 @@ class AddSeat extends Component {
         if (value && value.length > 0 && value > 0) {
             callback()
         } else {
-            callback(new Error('请输入正确的人数'))
+            callback()
         }
     }
 
@@ -63,7 +64,7 @@ class AddSeat extends Component {
         return (
             <div className="addseat">
                 <form>
-                    <List renderHeader={() => '新增开放席位'}>
+                    <List renderHeader={() => <FormattedMessage id="Restaurant-AddSeat-addseat-header" />}>
                         <DatePicker
                             {...getFieldProps('date', {
                                 initialValue: initDate,
@@ -72,14 +73,15 @@ class AddSeat extends Component {
                                 ],
                             }) }
                             error={!!getFieldError('date')}
-                            title="选择日期"
                             mode="date"
                             disabled={!!initDate}
                             minDate={minDate}
                             maxDate={maxDate}
                             format={val => val.format('YYYY-MM-DD')}
                         >
-                            <ListItem>日期</ListItem>
+                            <ListItem>
+                                <FormattedMessage id="Restaurant-AddSeat-date" />
+                            </ListItem>
                         </DatePicker>
                         <DatePicker
                             {...getFieldProps('time', {
@@ -87,12 +89,13 @@ class AddSeat extends Component {
                                     { required: true, message: '请选择时间' }
                                 ],
                             }) }
-                            title="选择时间"
                             mode="time"
                             error={!!getFieldError('time')}
                             format={val => val.format('HH:mm')}
                         >
-                            <ListItem>时间</ListItem>
+                            <ListItem>
+                                <FormattedMessage id="Restaurant-AddSeat-time" />
+                            </ListItem>
                         </DatePicker>
                         <InputItem
                             {...getFieldProps('count', {
@@ -107,27 +110,30 @@ class AddSeat extends Component {
                             clear
                             maxLength={3}
                         >
-                            <ListItem>人数</ListItem>
+                            <ListItem>
+                                <FormattedMessage id="Restaurant-AddSeat-count" />
+                            </ListItem>
                         </InputItem>
                         <TextareaItem
                             {...getFieldProps('comments') }
                             placeholder="请填写备注"
-                            title="备注"
+                            title={<FormattedMessage id="Restaurant-AddSeat-comments" />}
                             autoHeight
                             maxLength={500}
                         >
-                            <ListItem>备注</ListItem>
                         </TextareaItem>
                         <ListItem className="actions">
-                            <Button onClick={this.onCancel} inline>取消</Button>
+                            <Button onClick={this.onCancel} inline>
+                                <FormattedMessage id="Restaurant-AddSeat-btncancel" />
+                            </Button>
                             <Button type="primary"
                                 disabled={addSeatStatus === ActionStatus.ING}
                                 loading={addSeatStatus === ActionStatus.ING}
                                 onClick={this.onSubmit} inline>
                                 {
                                     addSeatStatus === ActionStatus.ING ?
-                                        '开放中..' :
-                                        '开放席位'
+                                        <FormattedMessage id="Restaurant-AddSeat-btnopenseat-ing" /> :
+                                        <FormattedMessage id="Restaurant-AddSeat-btnopenseat" />
                                 }
                             </Button>
                         </ListItem>

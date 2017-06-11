@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { List, InputItem, Button, TextareaItem, DatePicker, Picker } from 'antd-mobile'
 import { createForm } from 'rc-form'
+import { injectIntl, FormattedMessage } from 'react-intl'
 import moment from 'moment'
 
 import { getTimeList, addOrder } from '../../../redux/modules/customer'
@@ -23,6 +24,7 @@ class Order extends Component {
             mealtime,
             seatId: 0,
             seatcount: null,
+            restaurantName: '..'
         }
     }
 
@@ -38,6 +40,7 @@ class Order extends Component {
                 this.setState({
                     seatId: timeList[0].value,
                     seatcount: timeList[0].seatcount,
+                    restaurantName: timeList[0].restaurantName
                 })
             }
         }
@@ -81,13 +84,13 @@ class Order extends Component {
     render() {
         const { addOrderStatus } = this.props
         const { getFieldProps, getFieldError } = this.props.form
-        const { restaurantId, mealtime, seatId, seatcount } = this.state
+        const { restaurantId, mealtime, seatId, seatcount, restaurantName } = this.state
         const initDate = !!mealtime ? moment(mealtime, 'YYYYMMDD') : null
         const timeList = this.props.timeList.toJS()
 
         return (
             <div className="addorder">
-                <List renderHeader={() => '数寄屋桥次郎'}>
+                <List renderHeader={() => restaurantName}>
                     <DatePicker
                         {...getFieldProps('date', {
                             initialValue: initDate,
@@ -95,12 +98,13 @@ class Order extends Component {
                         onErrorClick={() => {
                             alert(getFieldError('date').join('、'))
                         }}
-                        title="选择日期"
                         mode="date"
                         disabled={!!initDate}
                         format={val => val.format('YYYY-MM-DD')}
                     >
-                        <ListItem>日期</ListItem>
+                        <ListItem>
+                            <FormattedMessage id="Customer-Order-date" />
+                        </ListItem>
                     </DatePicker>
                     <Picker
                         {...getFieldProps('time', {
@@ -113,7 +117,9 @@ class Order extends Component {
                         data={timeList}
                         onChange={this.onPickerChange}
                     >
-                        <ListItem arrow="horizontal">时间</ListItem>
+                        <ListItem arrow="horizontal">
+                            <FormattedMessage id="Customer-Order-time" />
+                        </ListItem>
                     </Picker>
                     <InputItem
                         {...getFieldProps('count', {
@@ -128,7 +134,9 @@ class Order extends Component {
                         disabled={!!initDate}
                         maxLength={3}
                     >
-                        <ListItem>人数</ListItem>
+                        <ListItem>
+                            <FormattedMessage id="Customer-Order-count" />
+                        </ListItem>
                     </InputItem>
                     <InputItem
                         {...getFieldProps('contactname', {
@@ -141,7 +149,9 @@ class Order extends Component {
                         clear
                         maxLength={20}
                     >
-                        <ListItem>姓名</ListItem>
+                        <ListItem>
+                            <FormattedMessage id="Customer-Order-contactname" />
+                        </ListItem>
                     </InputItem>
                     <InputItem
                         {...getFieldProps('contactmobile', {
@@ -154,7 +164,9 @@ class Order extends Component {
                         mode="mobile"
                         clear
                     >
-                        <ListItem>联系方式</ListItem>
+                        <ListItem>
+                            <FormattedMessage id="Customer-Order-contactmobile" />
+                        </ListItem>
                     </InputItem>
                     <InputItem
                         {...getFieldProps('cardNO', {
@@ -168,7 +180,9 @@ class Order extends Component {
                         mode="number"
                         maxLength={32}
                     >
-                        <ListItem>信用卡号</ListItem>
+                        <ListItem>
+                            <FormattedMessage id="Customer-Order-cardNO" />
+                        </ListItem>
                     </InputItem>
                     <InputItem
                         {...getFieldProps('cardExpires', {
@@ -181,7 +195,9 @@ class Order extends Component {
                         clear
                         maxLength={32}
                     >
-                        <ListItem>有效期</ListItem>
+                        <ListItem>
+                            <FormattedMessage id="Customer-Order-cardExpires" />
+                        </ListItem>
                     </InputItem>
                     <InputItem
                         {...getFieldProps('cardCode', {
@@ -194,18 +210,22 @@ class Order extends Component {
                         clear
                         maxLength={32}
                     >
-                        <ListItem>安全码</ListItem>
+                        <ListItem>
+                            <FormattedMessage id="Customer-Order-cardCode" />
+                        </ListItem>
                     </InputItem>
                     <ListItem className="actions">
-                        <Button onClick={this.onCancel} inline>取消</Button>
+                        <Button onClick={this.onCancel} inline>
+                            <FormattedMessage id="Customer-Order-brncancel" />
+                        </Button>
                         <Button type="primary"
                             disabled={addOrderStatus === ActionStatus.ING}
                             loading={addOrderStatus === ActionStatus.ING}
                             onClick={this.onSubmit} inline>
                             {
                                 addOrderStatus === ActionStatus.ING ?
-                                    '预定中..' :
-                                    '预定'
+                                    <FormattedMessage id="Customer-Order-btnbooking" /> :
+                                    <FormattedMessage id="Customer-Order-btnbook" />
                             }
                         </Button>
                     </ListItem>

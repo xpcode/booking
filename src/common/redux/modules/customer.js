@@ -35,7 +35,8 @@ export default ($$state = $$initialState, action) => {
                 return {
                     label: moment(item.mealtime, 'YYYYMMDDhhmmss').format('hh:mm'),
                     value: item.id,
-                    seatcount: item.seatcount
+                    seatcount: item.seatcount,
+                    restaurantName: item.restaurantName,
                 }
             })))
 

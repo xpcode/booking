@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
+import moment from 'moment'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { WingBlank, Accordion, List, Button } from 'antd-mobile'
 import { createForm } from 'rc-form'
-import moment from 'moment'
+import { injectIntl, FormattedMessage } from 'react-intl'
 
 import { getTodoList, cancelSeat, confirmOrder } from '../../../redux/modules/restaurant'
 import ActionStatus from '../../../constants/ActionStatus'
@@ -38,12 +39,12 @@ class Login extends Component {
         const { cancelSeatStatus, confirmOrderStatus } = this.props
         return this.props.todoList.map(item => {
             let title = {
-                1: '待预定',
-                2: '待确认',
-                4: '已取消',
+                1: <FormattedMessage id="Restaurant-TodoList-unbook" />,
+                2: <FormattedMessage id="Restaurant-TodoList-unconfirm" />,
+                4: <FormattedMessage id="Restaurant-TodoList-cancelled" />,
             }[item.seatStatus] || item.contactname
             if (item.seatStatus == 3 && item.orderStatus != 2) {
-                title = '预订失败'
+                title = <FormattedMessage id="Restaurant-TodoList-bookfailed" />
                 item.seatStatus = 4
             }
             const header = (
@@ -60,10 +61,10 @@ class Login extends Component {
                         {
                             (item.seatStatus === 3 && item.orderStatus == 2) && (
                                 <List.Item>
-                                    <div className="content">姓名：{item.contactname}</div>
-                                    <div className="content">人数：{item.seatcount}</div>
-                                    <div className="content">联系方式：{item.contactmobile}</div>
-                                    <div className="content">备注：{item.comments}</div>
+                                    <div className="content"><FormattedMessage id="Restaurant-TodoList-contactname" />：{item.contactname}</div>
+                                    <div className="content"><FormattedMessage id="Restaurant-TodoList-seatcount" />：{item.seatcount}</div>
+                                    <div className="content"><FormattedMessage id="Restaurant-TodoList-contactmobile" />：{item.contactmobile}</div>
+                                    <div className="content"><FormattedMessage id="Restaurant-TodoList-comments" />：{item.comments}</div>
                                 </List.Item>
                             )
                         }
@@ -77,8 +78,8 @@ class Login extends Component {
                                         onClick={this.handleCancelSeat(item)} inline>
                                         {
                                             cancelSeatStatus === ActionStatus.ING ?
-                                                '取消中..' :
-                                                '取消席位'
+                                                <FormattedMessage id="Restaurant-TodoList-cancel-ing" /> :
+                                                <FormattedMessage id="Restaurant-TodoList-cancel" />
                                         }
                                     </Button>
                                 </List.Item>
@@ -94,8 +95,8 @@ class Login extends Component {
                                         onClick={this.handleCancelSeat(item)} inline>
                                         {
                                             cancelSeatStatus === ActionStatus.ING ?
-                                                '取消中..' :
-                                                '取消席位'
+                                                <FormattedMessage id="Restaurant-TodoList-cancel" /> :
+                                                <FormattedMessage id="Restaurant-TodoList-cancel" />
                                         }
                                     </Button>
                                     <Button type="primary"
@@ -105,8 +106,8 @@ class Login extends Component {
                                         onClick={this.handleConfirmSeat(item)} inline>
                                         {
                                             confirmOrderStatus === ActionStatus.ING ?
-                                                '确认中..' :
-                                                '确认预订'
+                                                <FormattedMessage id="Restaurant-TodoList-confirm-ing" /> :
+                                                <FormattedMessage id="Restaurant-TodoList-confirm" />
                                         }
                                     </Button>
                                 </List.Item>
@@ -127,7 +128,9 @@ class Login extends Component {
                     {this.renderTodoList()}
                 </Accordion>
                 <div className="btn-fixed-wrapper">
-                    <Button type="primary" onClick={this.onCallback}>返回</Button>
+                    <Button type="primary" onClick={this.onCallback}>
+                        <FormattedMessage id="Restaurant-TodoList-btncallback" />
+                    </Button>
                 </div>
             </WingBlank>
         )

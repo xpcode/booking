@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { List, Button } from 'antd-mobile'
+import { injectIntl, FormattedMessage } from 'react-intl'
 
 import { getRestaurantList } from '../../../redux/modules/customer'
 import ActionStatus from '../../../constants/ActionStatus'
@@ -30,14 +31,14 @@ class RestaurantList extends Component {
                 <h1>
                     Sing.Fish
                 </h1>
-                <List renderHeader={() => '最新开放席位'}>
+                <List renderHeader={() => <FormattedMessage id="Customer-RestaurantList-header" />}>
                     {
                         this.props.restaurantList.map(item => {
                             if (!hash[item.id]) {
                                 hash[item.id] = true
                                 return (
                                     <ListItem key={item.id + '-' + item.mealtime}>
-                                        <a href={'/customer/restaurants/' + item.id}>{item.name}</a>
+                                        <a href={'/customer/restaurants/' + item.id + '?n=' + item.name}>{item.name}</a>
                                     </ListItem>
                                 )
                             }
@@ -46,7 +47,9 @@ class RestaurantList extends Component {
                     }
                 </List>
                 <div className="footer">
-                    <Button type="primary" onClick={this.handleSubmit.bind(this)}>我的预定</Button>
+                    <Button type="primary" onClick={this.handleSubmit.bind(this)}>
+                        <FormattedMessage id="Customer-RestaurantList-btnmyorders" />
+                    </Button>
                 </div>
             </div >
         )

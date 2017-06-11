@@ -79,7 +79,7 @@ class Login extends Component {
                             <InputItem
                                 {...getFieldProps('username', {
                                     rules: [
-                                        { required: true, message: intl.formatMessage({ id: 'intl.username.errmsg' }) },
+                                        { required: true, message: intl.formatMessage({ id: 'User-Login-username-errmsg' }) },
                                         { validator: this.validateAccount },
                                     ],
                                 }) }
@@ -87,22 +87,22 @@ class Login extends Component {
                                 autoFocus
                                 maxLength={20}
                                 error={!!getFieldError('username')}
-                                placeholder={intl.formatMessage({ id: 'intl.username.placeholder' })}>
-                                <FormattedMessage id="intl.username" />
+                                placeholder={intl.formatMessage({ id: 'User-Login-username-placeholder' })}>
+                                <FormattedMessage id="User-Login-username" />
                             </InputItem>
                             <InputItem
                                 {...getFieldProps('password', {
                                     rules: [
-                                        { required: true, message: intl.formatMessage({ id: 'intl.password.errmsg' }) },
+                                        { required: true, message: intl.formatMessage({ id: 'User-Login-password-errmsg' }) },
                                         { validator: this.validatePassword },
                                     ],
                                 }) }
                                 clear
                                 maxLength={20}
                                 error={!!getFieldError('password')}
-                                placeholder={intl.formatMessage({ id: 'intl.password.placeholder' })}
+                                placeholder={intl.formatMessage({ id: 'User-Login-password-placeholder' })}
                                 type="password">
-                                <FormattedMessage id="intl.password" />
+                                <FormattedMessage id="User-Login-password" />
                             </InputItem>
                             <ListItem>
                                 <Button
@@ -112,8 +112,8 @@ class Login extends Component {
                                     onClick={this.handleSubmit}>
                                     {
                                         loginStatus === ActionStatus.ING ?
-                                            <FormattedMessage id="intl.btnlogin.ing" /> :
-                                            <FormattedMessage id="intl.btnlogin" />
+                                            <FormattedMessage id="User-Login-btnlogin-ing" /> :
+                                            <FormattedMessage id="User-Login-btnlogin" />
                                     }
                                 </Button>
                             </ListItem>
@@ -125,7 +125,7 @@ class Login extends Component {
                 </div>
                 <div className="login-chooselan">
                     <ul className="choose-lang">
-                        <li><FormattedMessage id="intl.chooselang" /></li>
+                        <li><FormattedMessage id="User-Login-chooselang" /></li>
                         <li><a href="javascript:" onClick={this.handleSetLanguage('jp')}>JP</a></li>
                         <li><a href="javascript:" onClick={this.handleSetLanguage('zh-CN')}>CN</a></li>
                         <li><a href="javascript:" onClick={this.handleSetLanguage('en-US')}>EN</a></li>

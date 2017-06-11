@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { List, InputItem, Button } from 'antd-mobile'
+import { injectIntl, FormattedMessage } from 'react-intl'
 import moment from 'moment'
 
 import { getFreeSeats } from '../../../redux/modules/customer'
@@ -17,9 +18,12 @@ class RestaurantList extends Component {
 
         const { restaurantId } = props.params
         const currentDate = moment()
+        const qs = location.search.split('n=')
+        const restaurantName = qs.length < 2 ? '..' : decodeURIComponent(qs[1])
 
         this.state = {
             restaurantId,
+            restaurantName,
             initDate0: currentDate,
             initDate1: moment().set('month', currentDate.month() + 1),
             initDate2: moment().set('month', currentDate.month() + 2)
@@ -46,26 +50,29 @@ class RestaurantList extends Component {
 
     render() {
         const { freeSeats } = this.props
-        const { initDate0, initDate1, initDate2 } = this.state
+        const { initDate0, initDate1, initDate2, restaurantName } = this.state
 
         return (
             <div className="restaurantlist">
+                <h2>{restaurantName}</h2>
                 <div className="calendars">
                     <div className="calendar-wrapper">
-                        <h2>{initDate0.year()}年{initDate0.month() + 1}月 本月</h2>
+                        <h2>{initDate0.year()}.{initDate0.month() + 1} <FormattedMessage id="Customer-FreeSeats-currentmonth" /></h2>
                         <Calendar date={initDate0} dataSource={freeSeats} onClickDay={this.handleClickDate} />
                     </div>
                     <div className="calendar-wrapper">
-                        <h2>{initDate0.year()}年{initDate1.month() + 1}月</h2>
+                        <h2>{initDate0.year()}.{initDate1.month() + 1}</h2>
                         <Calendar date={initDate1} dataSource={freeSeats} onClickDay={this.handleClickDate} />
                     </div>
                     <div className="calendar-wrapper">
-                        <h2>{initDate0.year()}年{initDate2.month() + 1}月</h2>
+                        <h2>{initDate0.year()}.{initDate2.month() + 1}</h2>
                         <Calendar date={initDate2} dataSource={freeSeats} onClickDay={this.handleClickDate} />
                     </div>
                 </div>
                 <div className="btn-fixed-wrapper">
-                    <Button type="primary" onClick={this.handleCallback.bind(this)}>返回</Button>
+                    <Button type="primary" onClick={this.handleCallback.bind(this)}>
+                        <FormattedMessage id="Customer-FreeSeats-btncallback" />
+                    </Button>
                 </div>
             </div >
         )

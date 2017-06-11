@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Flex, WhiteSpace, List, InputItem, Button } from 'antd-mobile'
 import { createForm } from 'rc-form'
+import { injectIntl, FormattedMessage } from 'react-intl'
 import moment from 'moment'
 
 import { getSchedule } from '../../../redux/modules/restaurant'
@@ -52,20 +53,20 @@ class Schedule extends Component {
             <div>
                 <div className="calendars">
                     <div className="calendar-wrapper">
-                        <h2>{initDate0.year()}年{initDate0.month() + 1}月 本月</h2>
+                        <h2>{initDate0.year()}.{initDate0.month() + 1} <FormattedMessage id="Restaurant-TodoList-currentmonth" /></h2>
                         <Calendar date={initDate0} dataSource={schedule} onClickDay={this.handleClickDate} />
                     </div>
                     <div className="calendar-wrapper">
-                        <h2>{initDate0.year()}年{initDate1.month() + 1}月</h2>
+                        <h2>{initDate0.year()}.{initDate1.month() + 1}</h2>
                         <Calendar date={initDate1} dataSource={schedule} onClickDay={this.handleClickDate} />
                     </div>
                     <div className="calendar-wrapper">
-                        <h2>{initDate0.year()}年{initDate2.month() + 1}月</h2>
+                        <h2>{initDate0.year()}.{initDate2.month() + 1}</h2>
                         <Calendar date={initDate2} dataSource={schedule} onClickDay={this.handleClickDate} />
                     </div>
                 </div>
                 <div className="btn-fixed-wrapper">
-                    <Button type="primary" onClick={this.handleAddSeat}>+ 添加席位</Button>
+                    <Button type="primary" onClick={this.handleAddSeat}>+ <FormattedMessage id="Restaurant-TodoList-addseat" /></Button>
                 </div>
             </div>
         )

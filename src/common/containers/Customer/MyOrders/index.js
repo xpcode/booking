@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Accordion, List, InputItem, Button } from 'antd-mobile'
+import { injectIntl, FormattedMessage } from 'react-intl'
 import moment from 'moment'
 
 import { getMyOrderList } from '../../../redux/modules/customer'
@@ -25,9 +26,9 @@ class MyOrderList extends Component {
         // 状态  1:待预定 2:已预定待确认; 3:已确定 4:已取消 s
         return this.props.myorders.map(item => {
             const title = {
-                1: '待确认',
-                2: '已确认',
-                4: '席位已取消',
+                1: <FormattedMessage id="Customer-MyOrders-unconfirm" />,
+                2: <FormattedMessage id="Customer-MyOrders-confirmed" />,
+                4: <FormattedMessage id="Customer-MyOrders-cancelled" />,
             }[item.status] || item.contactname
             const header = (
                 <div className="span4">
@@ -41,10 +42,10 @@ class MyOrderList extends Component {
                 <Accordion.Panel className={pnlClass} header={header} key={String(item.id)}>
                     <List className="my-list">
                         <List.Item>
-                            <div className="content">姓名：{item.contactname}</div>
-                            <div className="content">人数：{item.seatcount}</div>
-                            <div className="content">联系方式：{item.contactmobile}</div>
-                            <div className="content">备注：{item.comments}</div>
+                            <div className="content"><FormattedMessage id="Customer-MyOrders-contactname" />：{item.contactname}</div>
+                            <div className="content"><FormattedMessage id="Customer-MyOrders-seatcount" />：{item.seatcount}</div>
+                            <div className="content"><FormattedMessage id="Customer-MyOrders-contactmobile" />：{item.contactmobile}</div>
+                            <div className="content"><FormattedMessage id="Customer-MyOrders-comments" />：{item.comments}</div>
                         </List.Item>
                     </List>
                 </Accordion.Panel>
@@ -65,7 +66,9 @@ class MyOrderList extends Component {
                     {this.renderMyOrderList()}
                 </Accordion>
                 <div className="btn-fixed-wrapper">
-                    <Button type="primary" onClick={this.handleCallback.bind(this)}>返回</Button>
+                    <Button type="primary" onClick={this.handleCallback.bind(this)}>
+                        <FormattedMessage id="Customer-MyOrders-btncallback" />
+                    </Button>
                 </div>
             </div>
         )
