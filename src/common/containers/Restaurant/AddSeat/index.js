@@ -70,9 +70,7 @@ class AddSeat extends Component {
                                     { required: true, message: '请选择日期' }
                                 ],
                             }) }
-                            onErrorClick={() => {
-                                alert(getFieldError('date').join('、'))
-                            }}
+                            error={!!getFieldError('date')}
                             title="选择日期"
                             mode="date"
                             disabled={!!initDate}
@@ -90,7 +88,8 @@ class AddSeat extends Component {
                             }) }
                             title="选择时间"
                             mode="time"
-                            format={val => val.format('hh:mm')}
+                            error={!!getFieldError('time')}
+                            format={val => val.format('HH:mm')}
                         >
                             <ListItem>时间</ListItem>
                         </DatePicker>
@@ -103,6 +102,7 @@ class AddSeat extends Component {
                             }) }
                             placeholder="请填写人数"
                             type="number"
+                            error={!!getFieldError('count')}
                             clear
                             maxLength={3}
                         >

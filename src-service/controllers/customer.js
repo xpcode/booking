@@ -9,8 +9,8 @@ export default function (router) {
         const { request, logger, mysql } = ctx
         const mealtime = moment().format('YYYYMMDD000000')
 
-        const where = `WHERE mealtime>${mealtime} and status<=2 ORDER BY seat.mealtime DESC`
-        const sql = `SELECT DISTINCT restaurant.id, restaurant.name, seat.mealtime FROM restaurant INNER JOIN seat ON restaurant.id=seat.restaurantId ${where}`
+        const where = `WHERE mealtime>${mealtime} and status<=2 ORDER BY seat.createtime DESC`
+        const sql = `SELECT DISTINCT restaurant.id, restaurant.name, seat.mealtime, seat.createtime FROM restaurant INNER JOIN seat ON restaurant.id=seat.restaurantId ${where}`
 
         logger.debug(sql)
 

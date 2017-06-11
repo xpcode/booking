@@ -90,7 +90,7 @@ export const addSeat = (seatInfo) => {
                     dispatch(genAction(ACTION_ADD_SEAT_SUCCEED, list))
                 } else {
                     dispatch(genAction(ACTION_ADD_SEAT_FAILURE))
-                    Toast.info(json.message || '请求失败', 2)
+                    Toast.info('添加席位失败', 2)
                 }
             })
     }

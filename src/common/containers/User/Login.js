@@ -87,9 +87,6 @@ class Login extends Component {
                                 autoFocus
                                 maxLength={20}
                                 error={!!getFieldError('username')}
-                                onErrorClick={() => {
-                                    alert(getFieldError('username').join('、'))
-                                }}
                                 placeholder={intl.formatMessage({ id: 'intl.username.placeholder' })}>
                                 <FormattedMessage id="intl.username" />
                             </InputItem>
@@ -103,9 +100,6 @@ class Login extends Component {
                                 clear
                                 maxLength={20}
                                 error={!!getFieldError('password')}
-                                onErrorClick={() => {
-                                    alert(getFieldError('password').join('、'))
-                                }}
                                 placeholder={intl.formatMessage({ id: 'intl.password.placeholder' })}
                                 type="password">
                                 <FormattedMessage id="intl.password" />

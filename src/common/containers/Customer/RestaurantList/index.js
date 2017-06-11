@@ -24,6 +24,7 @@ class RestaurantList extends Component {
     }
 
     render() {
+        const hash = {}
         return (
             <div className="restaurantlist">
                 <h1>
@@ -32,11 +33,15 @@ class RestaurantList extends Component {
                 <List renderHeader={() => '最新开放席位'}>
                     {
                         this.props.restaurantList.map(item => {
-                            return (
-                                <ListItem key={item.id}>
-                                    <a href={'/customer/restaurants/' + item.id}>{item.name}</a>
-                                </ListItem>
-                            )
+                            if (!hash[item.id]) {
+                                hash[item.id] = true
+                                return (
+                                    <ListItem key={item.id + '-' + item.mealtime}>
+                                        <a href={'/customer/restaurants/' + item.id}>{item.name}</a>
+                                    </ListItem>
+                                )
+                            }
+                            return null
                         })
                     }
                 </List>
