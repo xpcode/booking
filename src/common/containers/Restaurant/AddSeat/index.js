@@ -55,6 +55,7 @@ class AddSeat extends Component {
     }
 
     render() {
+        const { addSeatStatus } = this.props
         const { getFieldProps, getFieldError } = this.props.form
         const { mealtime } = this.state
         const initDate = !!mealtime ? moment(mealtime, 'YYYYMMDD') : null
@@ -119,7 +120,16 @@ class AddSeat extends Component {
                         </TextareaItem>
                         <ListItem className="actions">
                             <Button onClick={this.onCancel} inline>取消</Button>
-                            <Button type="primary" onClick={this.onSubmit} inline>开放席位</Button>
+                            <Button type="primary"
+                                disabled={addSeatStatus === ActionStatus.ING}
+                                loading={addSeatStatus === ActionStatus.ING}
+                                onClick={this.onSubmit} inline>
+                                {
+                                    addSeatStatus === ActionStatus.ING ?
+                                        '开放中..' :
+                                        '开放席位'
+                                }
+                            </Button>
                         </ListItem>
                     </List>
                 </form>
@@ -130,6 +140,7 @@ class AddSeat extends Component {
 
 const mapStateToProps = (state, ownProps) => {
     return {
+        addSeatStatus: state.restaurant.get('addSeatStatus'),
         restaurantIds: state.user.getIn(['user', 'restaurantIds']),
     }
 }

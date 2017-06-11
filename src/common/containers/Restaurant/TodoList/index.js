@@ -34,6 +34,7 @@ class Login extends Component {
     }
 
     renderTodoList() {
+        const { cancelSeatStatus, confirmOrderStatus } = this.props
         return this.props.todoList.map(item => {
             let title = {
                 1: '待预定',
@@ -68,15 +69,45 @@ class Login extends Component {
                         {
                             item.seatStatus === 1 && (
                                 <List.Item>
-                                    <Button type="primary" className="btn-cancel-large" onClick={this.handleCancelSeat(item)} inline>取消席位</Button>
+                                    <Button type="primary"
+                                        className="btn-cancel-large"
+                                        disabled={cancelSeatStatus === ActionStatus.ING}
+                                        loading={cancelSeatStatus === ActionStatus.ING}
+                                        onClick={this.handleCancelSeat(item)} inline>
+                                        {
+                                            cancelSeatStatus === ActionStatus.ING ?
+                                                '取消中..' :
+                                                '取消席位'
+                                        }
+                                    </Button>
                                 </List.Item>
                             )
                         }
                         {
                             item.seatStatus === 2 && (
                                 <List.Item>
-                                    <Button type="primary" className="btn-cancel" onClick={this.handleCancelSeat(item)} inline>取消席位</Button>
-                                    <Button type="primary" className="btn-confirm" onClick={this.handleConfirmSeat(item)} inline>确认预订</Button>
+                                    <Button type="primary"
+                                        className="btn-cancel"
+                                        disabled={cancelSeatStatus === ActionStatus.ING}
+                                        loading={cancelSeatStatus === ActionStatus.ING}
+                                        onClick={this.handleCancelSeat(item)} inline>
+                                        {
+                                            cancelSeatStatus === ActionStatus.ING ?
+                                                '取消中..' :
+                                                '取消席位'
+                                        }
+                                    </Button>
+                                    <Button type="primary"
+                                        className="btn-confirm"
+                                        disabled={confirmOrderStatus === ActionStatus.ING}
+                                        loading={confirmOrderStatus === ActionStatus.ING}
+                                        onClick={this.handleConfirmSeat(item)} inline>
+                                        {
+                                            confirmOrderStatus === ActionStatus.ING ?
+                                                '确认中..' :
+                                                '确认预订'
+                                        }
+                                    </Button>
                                 </List.Item>
                             )
                         }
@@ -104,6 +135,8 @@ class Login extends Component {
 
 const mapStateToProps = (state, ownProps) => {
     return {
+        cancelSeatStatus: state.restaurant.get('cancelSeatStatus'),
+        confirmOrderStatus: state.restaurant.get('confirmOrderStatus'),
         todoList: state.restaurant.get('todoList')
     }
 }

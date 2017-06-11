@@ -78,6 +78,7 @@ class Order extends Component {
     }
 
     render() {
+        const { addOrderStatus } = this.props
         const { getFieldProps, getFieldError } = this.props.form
         const { restaurantId, mealtime, seatId, seatcount } = this.state
         const initDate = !!mealtime ? moment(mealtime, 'YYYYMMDD') : null
@@ -196,7 +197,16 @@ class Order extends Component {
                     </InputItem>
                     <ListItem className="actions">
                         <Button onClick={this.onCancel} inline>取消</Button>
-                        <Button type="primary" onClick={this.onSubmit} inline>预定</Button>
+                        <Button type="primary"
+                            disabled={addOrderStatus === ActionStatus.ING}
+                            loading={addOrderStatus === ActionStatus.ING}
+                            onClick={this.onSubmit} inline>
+                            {
+                                loginStatus === ActionStatus.ING ?
+                                    '预定中..' :
+                                    '预定'
+                            }
+                        </Button>
                     </ListItem>
                 </List>
             </div>
@@ -206,6 +216,7 @@ class Order extends Component {
 
 const mapStateToProps = (state, ownProps) => {
     return {
+        addOrderStatus: state.customer.get('addOrderStatus'),
         timeList: state.customer.get('timeList'),
         userId: state.user.getIn(['user', 'id']),
     }
