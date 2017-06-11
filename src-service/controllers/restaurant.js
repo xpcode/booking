@@ -67,7 +67,7 @@ export default function (router) {
         const maxTime = date + '235959'
 
         const where = `WHERE ${minTime}<seat.mealtime AND seat.mealtime<${maxTime} AND seat.restaurantId=${restaurantId}`
-        const sql = `SELECT DISTINCT seat.id, user.id userId, order.id orderId, order.contactname, order.contactmobile, seat.mealtime, seat.seatcount, seat.status seatStatus, seat.comments, order.status orderStatus, seat.comments FROM seat
+        const sql = `SELECT DISTINCT seat.id, order.id userId, order.id orderId, order.contactname, order.contactmobile, seat.mealtime, seat.seatcount, seat.status seatStatus, seat.comments, order.status orderStatus, seat.comments FROM seat
 LEFT JOIN \`order\` ON seat.id=order.seatId
 LEFT JOIN \`user\` ON seat.userId=user.id ${where}`
 
