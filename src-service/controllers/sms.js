@@ -3,7 +3,7 @@ import fetch from 'isomorphic-fetch'
 import { toJSON, catchException } from '../util'
 
 export const sendSms = (to, message) => {
-    const url = `https://messagingapi.sinch.com/v1/sms/{to}`
+    const url = `https://messagingapi.sinch.com/v1/sms/${to}`
     const Authorization = `basic YXBwbGljYXRpb25cMWQ0YTQ3NWMtOGI4NS00MzEyLWFjMzItYTk0Y2YzYjJlZTQ1OlJmaFJDYlZNa0VlenJGNTQvQUNLNXc9PQ==`
     const options = {
         method: 'POST',
@@ -29,11 +29,13 @@ export default function (router) {
 
         await sendSms(to, message).then(function ({ errorCode, message, messageId, exceptionType, exceptionMessage }) {
             if (messageId && messageId > 0) {
+                logger.debug('发送成功')
                 ctx.body = {
                     code: 200,
                     data: messageId
                 }
             } else if (exceptionType && exceptionMessage) {
+                logger.debug(`发送失败: ${exceptionType} ${exceptionMessage}`)
                 ctx.body = {
                     code: 401,
                     data: {
@@ -42,11 +44,13 @@ export default function (router) {
                     }
                 }
             } else if (errorCode) {
+                logger.debug(`发送失败: ${errorCode}`)
                 ctx.body = {
                     code: errorCode,
                     data: message
                 }
             } else {
+                logger.debug('发送失败')
                 ctx.body = {
                     code: 500
                 }

@@ -161,6 +161,7 @@ export const addOrder = (orderInfo) => {
     return (dispatch, getState) => {
         const url = env.HTTP_ADD_ORDER
         const options = genFetchOptions('post', {
+            userId: orderInfo.userId,
             seatId: orderInfo.seatId,
             contactname: orderInfo.contactname,
             contactmobile: orderInfo.contactmobile,

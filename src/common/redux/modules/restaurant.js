@@ -55,8 +55,11 @@ export default ($$state = $$initialState, action) => {
         case ACTION_UPDATE_ORDERSTATUS_CONFIRM_SUCCEED:
             return $$state.update('todoList', todoList => {
                 return todoList.map(item => {
-                    if (item.orderId === action.payload) {
+                    if (item.id == action.payload.seatId) {
                         item.seatStatus = 3
+                    }
+                    if (item.orderId == action.payload.orderId) {
+                        item.orderStatus = 2
                     }
                     return item
                 })
@@ -181,16 +184,16 @@ export const ACTION_UPDATE_ORDERSTATUS_CONFIRM = 'ACTION_UPDATE_ORDERSTATUS_CONF
 export const ACTION_UPDATE_ORDERSTATUS_CONFIRM_SUCCEED = 'ACTION_UPDATE_ORDERSTATUS_CONFIRM_SUCCEED'
 export const ACTION_UPDATE_ORDERSTATUS_CONFIRM_FAILURE = 'ACTION_UPDATE_ORDERSTATUS_CONFIRM_FAILURE'
 
-export const confirmOrder = (orderId, seatId) => {
+export const confirmOrder = (orderId, seatId, userId) => {
     return (dispatch, getState) => {
         const url = env.HTTP_UPDATE_ORDER_CONFIRM
-        const options = genFetchOptions('post', { orderId, seatId })
+        const options = genFetchOptions('post', { orderId, seatId, userId })
 
         return fetch(url, options)
             .then(toJSON, catchException)
             .then(function (json) {
                 if (json.code === 200) {
-                    dispatch(genAction(ACTION_UPDATE_ORDERSTATUS_CONFIRM_SUCCEED, orderId))
+                    dispatch(genAction(ACTION_UPDATE_ORDERSTATUS_CONFIRM_SUCCEED, { orderId, seatId }))
                 } else {
                     dispatch(genAction(ACTION_UPDATE_ORDERSTATUS_CONFIRM_FAILURE))
                     Toast.info('更新订单状态失败', 2)

@@ -23,7 +23,7 @@ class Login extends Component {
 
     handleConfirmSeat = (item) => {
         return e => {
-            this.props.confirmOrder(item.orderId, item.id)
+            this.props.confirmOrder(item.orderId, item.id, item.userId)
         }
     }
 

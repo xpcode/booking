@@ -60,7 +60,7 @@ class MyOrderList extends Component {
     render() {
         const activeKey = this.props.myorders.map(item => String(item.id))
         return (
-            <div>
+            <div className="myorders">
                 <Accordion activeKey={activeKey} className="my-accordion" onChange={this.onChange}>
                     {this.renderMyOrderList()}
                 </Accordion>

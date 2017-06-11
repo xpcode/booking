@@ -57,7 +57,7 @@ export default function (router) {
         const minTime = mealtime + '000000'
         const maxTime = mealtime + '235959'
 
-        const where = `WHERE ${minTime}<mealtime AND mealtime<${maxTime} AND restaurantId=${restaurantId}`
+        const where = `WHERE ${minTime}<mealtime AND mealtime<${maxTime} AND status<3 AND restaurantId=${restaurantId}`
         const sql = `SELECT DISTINCT id, mealtime, seatcount FROM seat ${where}`
 
         logger.debug(sql)
@@ -102,11 +102,11 @@ FROM \`order\` o INNER JOIN seat ON o.seatId=seat.id INNER JOIN restaurant ON re
 
     router.post('/customer/addorder', async function (ctx) {
         const { request, logger, mysql } = ctx
-        const { seatId, contactname, contactmobile, contactinfo } = request.body
+        const { seatId, userId, contactname, contactmobile, contactinfo } = request.body
         const createtime = moment().format('YYYYMMDDhhmmss')
 
-        const values = `VALUES (${seatId}, '${contactname}', ${contactmobile}, '${contactinfo}', ${createtime}, 1)`
-        let sql = `INSERT INTO \`order\` (seatId, contactname, contactmobile, contactinfo, createtime, \`status\`) ${values}`
+        const values = `VALUES (${seatId}, ${userId}, '${contactname}', ${contactmobile}, '${contactinfo}', ${createtime}, 1)`
+        let sql = `INSERT INTO \`order\` (seatId, userId, contactname, contactmobile, contactinfo, createtime, \`status\`) ${values}`
 
         logger.debug(sql)
 
