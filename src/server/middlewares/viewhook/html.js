@@ -24,7 +24,7 @@ export default function html({ title }, state = {}) {
     <script>
       window.__INITIAL_STATE__ = ${JSON.stringify(state)}
     </script>
-    <script src="${baseUrl}/static/scripts/main.js"></script>
+    <script src="${baseUrl}/scripts/main.js"></script>
   </body>
 </html>`
 }

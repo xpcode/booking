@@ -8,8 +8,7 @@ var extractLESS = new ExtractTextPlugin('static/styles/default/index.min.css');
 var config = {
     entry: './src/client/index.js',
     output: {
-        publicPath: 'http://localhost:8082/',
-        path: path.join(__dirname, './'),
+        path: path.join(__dirname, '../'),
         filename: 'static/scripts/[name].js'
     },
     resolve: {
@@ -57,14 +56,14 @@ var config = {
         }),
         extractCSS,
         extractLESS,
-        // new webpack.optimize.UglifyJsPlugin({
-        //     output: {
-        //         comments: false,
-        //     },
-        //     compress: {
-        //         warnings: false
-        //     }
-        // }),
+        new webpack.optimize.UglifyJsPlugin({
+            output: {
+                comments: false,
+            },
+            compress: {
+                warnings: false
+            }
+        }),
     ],
     devtool: 'hidden-source-map',
     cache: true,
