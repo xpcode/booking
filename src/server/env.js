@@ -3,7 +3,7 @@ import path from 'path'
 const config = {
     HTTP_SERVER_PORT: 8081,
     HTTP_SERVICE_BASEURL: 'http://localhost:8080/',
-    HTTP_SCRIPT_BASEURL: 'http://localhost:8082/',
+    HTTP_SCRIPT_BASEURL: 'http://localhost:8082',
     HTTP_USER_LOGIN_URL: 'user/login',
     HTTP_SCRIPT_SUFFIX: '',
     HTTP_CONTENT_TYPE: 'application/json',
@@ -13,12 +13,13 @@ const config = {
     AUTH_WHITELIST: [
         '/login',
         '/logout',
-        '/api/login'
+        '/api/login',
+        /\.(html|htm|js|css|png|gif|svg|eot|ttf|woff|woff2)$/,
     ]
 }
 
 if (process.env.NODE_ENV === 'production') {
-    config.HTTP_SCRIPT_BASEURL = '/'
+    config.HTTP_SCRIPT_BASEURL = 'http://sing.fish'
     config.LOG_LEVEL = 'error'
 }
 
