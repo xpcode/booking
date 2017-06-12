@@ -11,6 +11,7 @@ import { IntlProvider, addLocaleData } from 'react-intl'
 import { LocaleProvider } from 'antd'
 import en from 'react-intl/locale-data/en'
 import zh from 'react-intl/locale-data/zh'
+import ja from 'react-intl/locale-data/ja'
 
 import { ACTION_INIT } from '../common/redux/modules/user'
 import Isomorph from '../common/helpers/Isomorph'
@@ -18,7 +19,7 @@ import routes from '../common/redux/routes'
 import messages, { locale } from '../locales'
 import './style.less'
 
-addLocaleData([...en, ...zh])
+addLocaleData([...en, ...zh, ...ja])
 
 const finalState = {}
 const {
