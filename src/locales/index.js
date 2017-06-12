@@ -3,13 +3,13 @@ import cookies from 'cookies-js'
 
 import zh_CN from './zh-CN'
 import en_US from './en-US'
-import ja from './ja'
+import jp from './jp'
 
 const messageObj = {
     'zh-CN': zh_CN,
     'en-US': en_US,
     'en': en_US,
-    'ja': ja,
+    'jp': jp,
 }
 
 export const locale = cookies.get('lang') || BrowserLocale()
