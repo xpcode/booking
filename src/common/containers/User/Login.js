@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import cookies from 'cookies-js'
+import BrowserLocale from 'browser-locale'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { List, InputItem, Button, Toast } from 'antd-mobile'
@@ -126,7 +127,7 @@ class Login extends Component {
                 <div className="login-chooselan">
                     <ul className="choose-lang">
                         <li><FormattedMessage id="User-Login-chooselang" /></li>
-                        <li><a href="javascript:" onClick={this.handleSetLanguage('jp')}>JP</a></li>
+                        <li><a href="javascript:" onClick={this.handleSetLanguage('ja')}>JP</a></li>
                         <li><a href="javascript:" onClick={this.handleSetLanguage('zh-CN')}>CN</a></li>
                         <li><a href="javascript:" onClick={this.handleSetLanguage('en-US')}>EN</a></li>
                     </ul>
