@@ -4,13 +4,14 @@ const baseUrl = env.HTTP_SCRIPT_BASEURL
 const suffix = env.HTTP_SCRIPT_SUFFIX
 
 export default function html({ title }, state = {}) {
-  let links = ``
+    let links = ``
 
-  if (process.env.NODE_ENV === 'production') {
-    links += `<link href="${baseUrl}/styles/default/index.min.css" rel="stylesheet" type="text/css" />`
-  }
+    if (process.env.NODE_ENV === 'production') {
+        links += `<link href="${baseUrl}/styles/default/vendor.min.css" rel="stylesheet" type="text/css" />`
+        links += `<link href="${baseUrl}/styles/default/index.min.css" rel="stylesheet" type="text/css" />`
+    }
 
-  return `<!DOCTYPE html>
+    return `<!DOCTYPE html>
 <html>
   <head>
     <meta charSet="utf-8"/>
