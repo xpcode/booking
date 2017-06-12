@@ -7,7 +7,7 @@ export default function html({ title }, state = {}) {
     let links = ``
 
     if (process.env.NODE_ENV === 'production') {
-        links += `<link href="${baseUrl}/styles/default/vendor.min.css" rel="stylesheet" type="text/css" />`
+        links += `<link href="${baseUrl}/styles/default/vender.min.css" rel="stylesheet" type="text/css" />`
         links += `<link href="${baseUrl}/styles/default/index.min.css" rel="stylesheet" type="text/css" />`
     }
 
