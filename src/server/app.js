@@ -18,7 +18,7 @@ new Koa()
   .use(bodyParser())
   .use(router.routes())
   .use(router.allowedMethods())
-  .use(serve(path.join(process.cwd(), 'src-restaurant/static')))
+  .use(serve(path.join(process.cwd(), 'static')))
   .listen(env.HTTP_SERVER_PORT)
 
 console.log(`listening on port ${env.HTTP_SERVER_PORT} -- ${process.env.NODE_ENV}`)
