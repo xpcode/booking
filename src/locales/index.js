@@ -9,7 +9,7 @@ const messageObj = {
     'zh-CN': zh_CN,
     'en-US': en_US,
     'en': en_US,
-    'jp': jp,
+    'ja': jp,
 }
 
 export const locale = cookies.get('lang') || BrowserLocale()
