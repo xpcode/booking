@@ -3,7 +3,7 @@ import path from 'path'
 const config = {
     HTTP_SERVER_PORT: 8081,
     HTTP_SERVICE_BASEURL: 'http://localhost:8080/',
-    HTTP_SCRIPT_BASEURL: 'http://localhost:8082',
+    HTTP_SCRIPT_BASEURL: 'http://localhost:8082/static',
     HTTP_USER_LOGIN_URL: 'user/login',
     HTTP_SCRIPT_SUFFIX: '',
     HTTP_CONTENT_TYPE: 'application/json',

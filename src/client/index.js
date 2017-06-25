@@ -59,3 +59,7 @@ match({ routes, location }, (error, redirectLocation, renderProps) => {
 if (module.hot) {
     module.hot.accept()
 }
+
+if (locale !== 'zh-CN') {
+    require('./html.less')
+}
